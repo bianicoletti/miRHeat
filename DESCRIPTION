@@ -17,3 +17,5 @@ Description: The miRHeat package provides functions to process and visualize miR
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/bianicoletti/miRHeat
+BugReports: https://github.com/bianicoletti/miRHeat/issues
