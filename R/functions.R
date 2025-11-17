@@ -11,16 +11,25 @@
 #' @param file Path para o arquivo de entrada.
 #' @param pattern String. Padrão regex para detectar início de bloco (default '^.*_UTR_.*').
 #' @param guess_tabular Logical. Se TRUE, tenta detectar automaticamente se o arquivo é tabular.
-#' @return Um data.frame com colunas extraídas (miRNA, target_raw, e quaisquer valores numéricos detectados).
+#' @param mirna_col Optional character. Nome da coluna que contém miRNAs (aplica-se a arquivos tabulares).
+#' @param target_col Optional character. Nome da coluna que contém targets/genes (aplica-se a arquivos tabulares).
+#' @return Um data.frame com colunas extraídas (miRNA, target, gene, utr e quaisquer valores numéricos detectados).
 #' @examples
 #' \dontrun{
-#' df <- parse_file("exemplo_blocos.txt")
+#' file <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
+#' df <- parse_file(file)
+#' head(df)
 #' }
 #' @export
-parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
+parse_file <- function(file,
+                       pattern = "^.*_UTR_.*",
+                       guess_tabular = TRUE,
+                       mirna_col = NULL,
+                       target_col = NULL) {
   if (!file.exists(file)) stop("Arquivo não encontrado: ", file)
 
   ext <- tolower(tools::file_ext(file))
+
   # Helper: normaliza nomes de colunas
   clean_name <- function(x) {
     x <- gsub("[^A-Za-z0-9_]", "_", x)
@@ -28,62 +37,72 @@ parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
     tolower(trimws(x))
   }
 
-  # ----- Caso tabular (csv/tsv) -----
+  # ----- Caso tabular (csv/tsv/txt) -----
   if (guess_tabular && ext %in% c("csv", "tsv", "txt")) {
-    # tenta inferir se há separador na primeira linha
+    # tenta inferir separador pela primeira linha
     first_line <- readLines(file, n = 1, warn = FALSE)
-    if (grepl(",", first_line) && ext == "csv") {
+    df_tab <- NULL
+    if (grepl(",", first_line) && ext %in% c("csv", "txt")) {
       df_tab <- tryCatch(utils::read.csv(file, stringsAsFactors = FALSE), error = function(e) NULL)
     } else if (grepl("\t", first_line) && ext %in% c("tsv", "txt")) {
       df_tab <- tryCatch(utils::read.delim(file, stringsAsFactors = FALSE), error = function(e) NULL)
-    } else {
-      df_tab <- NULL
+    } else if (grepl(";", first_line) && ext %in% c("csv","txt")) {
+      # possível CSV com ponto-e-vírgula
+      df_tab <- tryCatch(utils::read.csv2(file, stringsAsFactors = FALSE), error = function(e) NULL)
     }
 
-    if (!is.null(df_tab)) {
-      # detecta colunas candidatas
+    if (!is.null(df_tab) && is.data.frame(df_tab) && ncol(df_tab) > 0) {
       names(df_tab) <- clean_name(names(df_tab))
       nms <- names(df_tab)
-      # tenta encontrar miRNA column
-      mirna_col <- nms[grepl("mirna|mi-rna|mir-|mir", nms)]
-      target_col <- nms[grepl("gene|target|utr", nms)]
-      # detecta colunas numéricas que pareçam scores
-      score_col <- nms[vapply(df_tab, is.numeric, logical(1))]
 
-      # se não achar explicitamente miRNA/target, pergunta interativamente
-      if (length(mirna_col) == 0 || length(target_col) == 0) {
-        message("Colunas detectadas no arquivo tabular:")
-        print(nms)
-        if (length(mirna_col) == 0) {
-          mirna_col <- readline(prompt = "Digite o nome da coluna que contém os miRNAs (ou deixe em branco para sair): ")
-          if (mirna_col == "") stop("miRNA column não fornecida.")
-          mirna_col <- clean_name(mirna_col)
-        }
-        if (length(target_col) == 0) {
-          target_col <- readline(prompt = "Digite o nome da coluna que contém os targets (gene/UTR) (ou deixe em branco para sair): ")
-          if (target_col == "") stop("target column não fornecida.")
-          target_col <- clean_name(target_col)
-        }
-      } else {
-        mirna_col <- mirna_col[1]
-        target_col <- target_col[1]
+      # Se o usuário forneceu nomes, usa-os (após limpeza)
+      if (!is.null(mirna_col)) mirna_col <- clean_name(mirna_col)
+      if (!is.null(target_col)) target_col <- clean_name(target_col)
+
+      # tenta encontrar miRNA/target automaticamente se não fornecido
+      if (is.null(mirna_col)) {
+        mirna_candidates <- nms[grepl("mirna|mirna_|mi-rna|mi-rna|\\bmir\\b|mi_r|mi-r", nms, ignore.case = TRUE)]
+        if (length(mirna_candidates) >= 1) mirna_col <- mirna_candidates[1]
       }
+      if (is.null(target_col)) {
+        target_candidates <- nms[grepl("gene|target|utr", nms, ignore.case = TRUE)]
+        if (length(target_candidates) >= 1) target_col <- target_candidates[1]
+      }
+
+      # Se ainda faltam colunas, aborta com mensagem informativa (sem interatividade)
+      missing <- character(0)
+      if (is.null(mirna_col)) missing <- c(missing, "miRNA")
+      if (is.null(target_col)) missing <- c(missing, "target/gene/utr")
+      if (length(missing) > 0) {
+        stop(
+          "Não foi possível identificar automaticamente as colunas tabulares necessárias: ",
+          paste(missing, collapse = ", "),
+          ". Colunas detectadas: ", paste(nms, collapse = ", "),
+          ".\nSolução: reexporte o arquivo com cabeçalho claro ou chame parse_file(..., mirna_col = 'nome', target_col = 'nome')."
+        )
+      }
+
+      # detecta colunas numéricas que pareçam scores (exceto colunas chave)
+      score_col <- setdiff(nms[vapply(df_tab, is.numeric, logical(1))], c(mirna_col, target_col))
 
       df_out <- data.frame(
         miRNA = df_tab[[mirna_col]],
-        target_raw = df_tab[[target_col]],
+        target = df_tab[[target_col]],
         stringsAsFactors = FALSE
       )
 
       # anexa colunas numéricas detectadas (scores)
       for (sc in score_col) {
+        out_name <- clean_name(sc)
         # evita sobrescrever colunas base
-        if (!(sc %in% c(mirna_col, target_col))) {
-          df_out[[clean_name(sc)]] <- df_tab[[sc]]
+        if (!(out_name %in% c("mirna", "target"))) {
+          df_out[[out_name]] <- df_tab[[sc]]
         }
       }
+
       return(df_out)
     }
+    # se df_tab não foi detectado, continua para modo blocos
   }
 
   # ----- Caso TXT em blocos -----
@@ -97,20 +116,21 @@ parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
 
   # funcoes auxiliares de extração
   extrai_miRNA <- function(bloco) {
-    # procura padrão tipo hsa-miR-... ou miR...
-    pat <- "(hsa-)?miR[-A-Za-z0-9_]+"
+    # procura padrões como hsa-miR-..., miR-..., miRNA-..., miR...
+    pat <- "(?:hsa-)?(?:miR|miRNA)[-A-Za-z0-9_]+"
     hit <- unique(unlist(regmatches(bloco, gregexpr(pat, bloco, ignore.case = TRUE))))
-    if (length(hit) >= 1) {
+    if (length(hit) >= 1 && nzchar(hit[1])) {
       return(hit[1])
     }
-    # fallback: procura linha que contenha 'miR' ignorando case
-    idx <- grep("mir", bloco, ignore.case = TRUE)
+    # fallback: procura linha que contenha 'miR' ou 'mirna' ignorando case
+    idx <- grep("mirna|mir", bloco, ignore.case = TRUE)
     if (length(idx) >= 1) {
       cand <- trimws(bloco[idx[1]])
       return(cand)
     }
     return(NA_character_)
   }
+
   extrai_target <- function(first_line) {
     txt <- trimws(first_line)
     # tenta extrair gene e utr: GENE_UTR_123 ou variantes
@@ -125,23 +145,26 @@ parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
       return(list(gene = txt, utr = NA_character_, target = txt))
     }
   }
+
   extrai_pairs_numeric <- function(bloco) {
-    # captura pares "nome = valor" onde valor é numérico (com sinal opcional e decimal)
-    pat <- "([A-Za-z0-9\\+\\-\\_\\s\\+\\+\\.\\%]+?)\\s*=\\s*(-?[0-9]+\\.?[0-9]*)"
+    # captura pares "nome = valor" onde valor é numérico (com sinal opcional e decimal),
+    # aceita percentuais em nome, ignora unidades
+    pat <- "([A-Za-z0-9\\+\\-\\_\\s\\.\\%]+?)\\s*=\\s*(-?[0-9]+\\.?[0-9]*(?:[eE][-+]?[0-9]+)?)"
     hits <- regmatches(bloco, gregexpr(pat, bloco, perl = TRUE, ignore.case = TRUE))
     pairs <- unlist(hits)
     if (length(pairs) == 0) return(list())
-    # processa cada match: queremos nome (limpo) e valor numérico
     res <- list()
     for (p in pairs) {
       m <- regexec(pat, p, perl = TRUE, ignore.case = TRUE)
       mm <- regmatches(p, m)[[1]]
       if (length(mm) >= 3) {
         name_raw <- trimws(mm[2])
-        # limpa o nome pra usar como coluna
         name_col <- gsub("[^A-Za-z0-9_]", "_", tolower(name_raw))
         name_col <- gsub("_+", "_", name_col)
+        # remove trailing/leading underscores
+        name_col <- gsub("^_|_$", "", name_col)
         val <- as.numeric(mm[3])
+        # se já existir, torna em vetor (mantém último valor se necessário)
         res[[name_col]] <- val
       }
     }
@@ -155,23 +178,41 @@ parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
     mi <- extrai_miRNA(b)
     target_info <- extrai_target(b[1])
     pairs <- extrai_pairs_numeric(b)
-    rows[[i]] <- c(list(miRNA = mi, target_raw = target_info$target, gene = target_info$gene, utr = target_info$utr), pairs)
+    rows[[i]] <- c(list(miRNA = mi, target = target_info$target, gene = target_info$gene, utr = target_info$utr), pairs)
   }
 
   # une em data.frame (preenchendo NA onde necessário)
-  df <- do.call(rbind, lapply(rows, function(x) {
-    # garante que todos os nomes se alinhem
-    as.data.frame(lapply(x, function(y) if (is.null(y)) NA else y), stringsAsFactors = FALSE)
-  }))
-  # corrige nomes e tipos numéricos
-  # converter colunas que parecem numéricas
-  for (nm in names(df)) {
-    if (all(is.na(df[[nm]]) | grepl("^-?[0-9]+\\.?[0-9]*$", as.character(df[[nm]])))) {
-      df[[nm]] <- as.numeric(df[[nm]])
+  # coletar todos nomes possíveis
+  all_names <- unique(unlist(lapply(rows, names)))
+  df_list <- lapply(rows, function(x) {
+    # garante que todos os nomes existam e sejam NA se ausentes
+    res <- setNames(vector("list", length(all_names)), all_names)
+    for (nm in all_names) {
+      res[[nm]] <- if (!is.null(x[[nm]])) x[[nm]] else NA
+    }
+    as.data.frame(res, stringsAsFactors = FALSE, check.names = FALSE)
+  })
+  df <- do.call(rbind, df_list)
+
+  # Evitar conversão de colunas chave para numérico
+  core_cols <- c("miRNA", "target", "gene", "utr")
+  other_cols <- setdiff(names(df), core_cols)
+
+  # Converter colunas "other" que parecem numéricas
+  for (nm in other_cols) {
+    # se toda a coluna for NA ou números no formato, converte
+    vals_chr <- as.character(df[[nm]])
+    if (all(is.na(vals_chr) | grepl("^\\s*-?[0-9]+\\.?[0-9]*(?:[eE][-+]?[0-9]+)?\\s*$", vals_chr))) {
+      df[[nm]] <- as.numeric(vals_chr)
     }
   }
-  # renomeia target_raw para target se existir
-  if ("target_raw" %in% names(df)) names(df)[names(df) == "target_raw"] <- "target"
+
+  # renomeia target para target (já OK) e organiza colunas
+  # padroniza nomes: se existir 'target' ok; se estiver 'target_raw', renomeia
+  if ("target_raw" %in% names(df) && !("target" %in% names(df))) {
+    names(df)[names(df) == "target_raw"] <- "target"
+  }
+
   # organiza colunas: miRNA, target, gene, utr, outros...
   core <- c("miRNA", "target", "gene", "utr")
   others <- setdiff(names(df), core)
@@ -182,13 +223,27 @@ parse_file <- function(file, pattern = "^.*_UTR_.*", guess_tabular = TRUE) {
 
 
 #' Seleciona qual coluna numérica será usada como Score
+#'
+#' Detecta automaticamente colunas numéricas e define a coluna selecionada como
+#' nova coluna `Score` no data.frame retornado. Evita interatividade: se houver
+#' múltiplas colunas numéricas requer que `score_column` seja fornecido.
+#'
+#' @param df Data.frame (geralmente resultado de parse_file()).
+#' @param score_column Character or NULL. Nome da coluna numérica a usar como Score.
+#'                     Se NULL e apenas uma coluna numérica existir, ela será usada automaticamente.
+#' @return Data.frame com nova coluna `Score`.
+#' @examples
+#' df <- data.frame(miRNA = c("a","b"), target = c("T1","T2"), energy = c(-10, -20))
+#' select_score(df) # usa energy automaticamente
+#' @export
 select_score <- function(df, score_column = NULL) {
-  if (!"data.frame" %in% class(df)) {
+  if (!is.data.frame(df)) {
     stop("df deve ser um data.frame produzido por parse_file().")
   }
 
-  # Descobre automaticamente colunas numéricas
+  # Descobre automaticamente colunas numéricas, exceto colunas chave
   numeric_cols <- names(df)[sapply(df, is.numeric)]
+  numeric_cols <- setdiff(numeric_cols, c("utr", "target", "miRNA", "gene"))
 
   if (length(numeric_cols) == 0) {
     stop("Nenhuma coluna numérica encontrada para ser usada como Score.")
@@ -204,21 +259,23 @@ select_score <- function(df, score_column = NULL) {
         paste0(
           "Existem múltiplas colunas numéricas: ",
           paste(numeric_cols, collapse = ", "),
-          "\nEspecifique qual deseja usar com score_column = \"nome_da_coluna\"."
+          ". Especifique qual deseja usar com score_column = \"nome_da_coluna\"."
         )
       )
     }
   }
 
-  # Verifica se o nome existe
+  # Verifica se o nome existe e é numérico
   if (!score_column %in% names(df)) {
-    stop("Coluna selecionada não encontrada no data.frame: ", score_column)
+    stop("Coluna selecionada não encontrada no data.frame: '", score_column, "'.")
+  }
+  if (!is.numeric(df[[score_column]])) {
+    stop("A coluna selecionada não é numérica: '", score_column, "'.")
   }
 
   df$Score <- df[[score_column]]
-  df
+  return(df)
 }
-
 
 
 #' Aplica filtros numéricos ao Score
@@ -231,12 +288,13 @@ select_score <- function(df, score_column = NULL) {
 #' @param remove_na Logical. Se TRUE remove linhas com Score NA.
 #' @return Data.frame filtrado.
 #' @examples
-#' \dontrun{
-#' df_f <- apply_numeric_filters(df2, min_value = -20)
-#' }
+#' df <- data.frame(miRNA = c("a","b","c"), Score = c(-10, NA, -30))
+#' apply_numeric_filters(df, min_value = -25)
 #' @export
 apply_numeric_filters <- function(df, min_value = NULL, max_value = NULL, remove_na = TRUE) {
+  if (!is.data.frame(df)) stop("df deve ser um data.frame.")
   if (!"Score" %in% names(df)) stop("Data.frame deve conter a coluna 'Score'. Use select_score() antes.")
+
   keep <- rep(TRUE, nrow(df))
   if (!is.null(min_value)) keep <- keep & (!is.na(df$Score) & df$Score >= min_value)
   if (!is.null(max_value)) keep <- keep & (!is.na(df$Score) & df$Score <= max_value)
@@ -250,20 +308,20 @@ apply_numeric_filters <- function(df, min_value = NULL, max_value = NULL, remove
 #' Prepara tabela padronizada para heatmap
 #'
 #' Recebe o data.frame com Score e cria/garante as colunas:
-#' miRNA, Target, Gene, UTR, Score. Retorna um data.frame pronto para o heatmap.
+#' miRNA, target, gene, utr, Score. Retorna um data.frame pronto para o heatmap.
 #'
 #' @param df Data.frame com pelo menos miRNA, target/gene e Score.
-#' @return Data.frame com colunas ordenadas: miRNA, Target, Gene, UTR, Score, e outras colunas opcionais.
+#' @return Data.frame com colunas ordenadas: miRNA, target, gene, utr, Score e outras colunas opcionais.
 #' @examples
-#' \dontrun{
-#' df_ready <- prepare_for_heatmap(df_filtered)
-#' }
+#' df <- data.frame(miRNA = c("a","b"), target = c("G1_UTR_1","G2"), Score = c(-10, -20))
+#' prepare_for_heatmap(df)
 #' @export
 prepare_for_heatmap <- function(df) {
   if (!is.data.frame(df)) stop("df deve ser um data.frame.")
   # checagens
   if (!("miRNA" %in% names(df))) stop("Coluna 'miRNA' não encontrada.")
   if (!("Score" %in% names(df))) stop("Coluna 'Score' não encontrada. Use select_score().")
+
   # target: se não existir, tenta construir a partir de gene/utr
   if (!("target" %in% names(df))) {
     if ("gene" %in% names(df) && "utr" %in% names(df)) {
@@ -274,16 +332,16 @@ prepare_for_heatmap <- function(df) {
       stop("Impossível construir 'target' a partir dos dados existentes.")
     }
   }
+
   # Garante colunas gene/utr
   if (!("gene" %in% names(df))) {
-    # tenta extrair gene de target (antes do _UTR_)
     df$gene <- sub("(_UTR_.*$)|([_\\.-]UTR[_\\.-].*$)", "", df$target)
   }
   if (!("utr" %in% names(df))) {
-    # tenta extrair UTR id se houver
     utrs <- regmatches(df$target, regexec("_UTR_([0-9]+)$", df$target))
     df$utr <- sapply(utrs, function(x) if (length(x) >= 2) x[2] else NA_character_)
   }
+
   # organiza colunas
   core <- c("miRNA", "target", "gene", "utr", "Score")
   rest <- setdiff(names(df), core)
@@ -292,6 +350,7 @@ prepare_for_heatmap <- function(df) {
   return(df_out)
 }
 
+
 #' Plot Heatmap for miRNA–UTR Interactions
 #'
 #' @description
@@ -299,41 +358,55 @@ prepare_for_heatmap <- function(df) {
 #' Automatically determines the optimal number of clusters using
 #' dynamic tree cutting.
 #'
-#' @param df Data frame containing miRNA, UTR, and Score columns.
+#' @param df Data frame containing miRNA, UTR (or utr column) and Score columns.
 #' @param output_file Optional path to export PNG (default = NULL).
 #' @param width Width of PNG if exporting (in pixels).
 #' @param height Height of PNG if exporting (in pixels).
-#'
 #' @return Returns the ComplexHeatmap object invisibly.
-#'
+#' @examples
+#' \dontrun{
+#' file <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
+#' df <- parse_file(file)
+#' df <- select_score(df, "interaction_energy")
+#' df <- prepare_for_heatmap(df)
+#' plot_mirheat(df)
+#' }
 #' @export
 plot_mirheat <- function(df,
                          output_file = NULL,
                          width = 2000,
                          height = 1800) {
 
-  # Required packages
-  require(reshape2)
-  require(ComplexHeatmap)
-  require(circlize)
-  require(dynamicTreeCut)
+  # valida entradas
+  if (!is.data.frame(df)) stop("df deve ser um data.frame.")
+  if (!("miRNA" %in% names(df))) stop("Coluna 'miRNA' não encontrada.")
+  if (!("Score" %in% names(df))) stop("Coluna 'Score' não encontrada. Use select_score().")
+  if (!("utr" %in% names(df))) {
+    # tenta criar via prepare_for_heatmap
+    df <- prepare_for_heatmap(df)
+  }
 
   message("→ Construindo matriz miRNA × UTR...")
 
-  # Reformat
+  # Reformat usando namespace explícito
   matriz <- reshape2::dcast(df, miRNA ~ utr, value.var = "Score")
+  # dcast cria miRNA como coluna; movemos para rownames
   rownames(matriz) <- matriz$miRNA
   matriz$miRNA <- NULL
 
-  # Replace NAs with mean of row
+  # Replace NAs with mean of row (se toda linha NA, manter NA -> substituir por 0)
   matriz <- t(apply(matriz, 1, function(x) {
-    x[is.na(x)] <- mean(x, na.rm = TRUE)
+    if (all(is.na(x))) {
+      x[is.na(x)] <- 0
+    } else {
+      x[is.na(x)] <- mean(x, na.rm = TRUE)
+    }
     x
   }))
 
   # Distance + clustering
-  d_miRNA <- dist(matriz)
-  hc_miRNA <- hclust(d_miRNA, method = "ward.D2")
+  d_miRNA <- stats::dist(matriz)
+  hc_miRNA <- stats::hclust(d_miRNA, method = "ward.D2")
 
   message("→ Detectando automaticamente número de clusters...")
 
@@ -344,24 +417,26 @@ plot_mirheat <- function(df,
     pamRespectsDendro = TRUE
   )
 
-  message(paste("→ Número detectado:", length(unique(clusters)), "clusters."))
+  n_clusters <- length(unique(clusters))
+  message(sprintf("→ Número detectado: %d clusters.", n_clusters))
 
-  annotation <- HeatmapAnnotation(
+  # Annotations
+  heatmap_annotation <- ComplexHeatmap::HeatmapAnnotation(
     Cluster = clusters,
     col = list(Cluster = structure(
-      circlize::rand_color(length(unique(clusters))),
-      names = unique(clusters)
+      circlize::rand_color(n_clusters),
+      names = as.character(unique(clusters))
     ))
   )
 
   # Palette for scores
   paleta <- circlize::colorRamp2(
-    seq(min(matriz), max(matriz), length.out = 5),
+    seq(min(matriz, na.rm = TRUE), max(matriz, na.rm = TRUE), length.out = 5),
     c("#b2182b", "#f4a582", "#f7f7f7", "#92c5de", "#2166ac")
   )
 
   # Heatmap
-  ht <- Heatmap(
+  ht <- ComplexHeatmap::Heatmap(
     matriz,
     name = "Score",
     col = paleta,
@@ -369,15 +444,15 @@ plot_mirheat <- function(df,
     cluster_columns = TRUE,
     show_row_names = TRUE,
     show_column_names = TRUE,
-    left_annotation = rowAnnotation(Cluster = clusters)
+    top_annotation = heatmap_annotation
   )
 
   # Export PNG if requested
   if (!is.null(output_file)) {
     message("→ Exportando heatmap para: ", output_file)
-    png(output_file, width = width, height = height, res = 200)
-    draw(ht)
-    dev.off()
+    grDevices::png(output_file, width = width, height = height, res = 200)
+    ComplexHeatmap::draw(ht)
+    grDevices::dev.off()
   }
 
   message("→ Heatmap pronto!")

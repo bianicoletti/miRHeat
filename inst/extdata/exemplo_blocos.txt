@@ -1,0 +1,109 @@
+MICA_UTR_126
+          1749         1759
+             |         |
+5'-AGA...AGAG           CUAA...AUU-3'
+             GCAGCCUCAGG
+             +++++++++++
+             UGUUGGAGUCC
+3'-AAU...UACG           A-5'
+             |         |
+            12         2
+hsa-miR-544b
+
+interaction energy = -5.34 kcal/mol
+
+
+
+MICA_UTR_126
+          2402                     2423
+             |                     |
+5'-AGA...GAUG     GAAC   -  G       GAAA...AUU-3'
+             GGAGG    UGG UA GGGCUGG
+             |||||    ||| :| +++++++
+             CCUCC    ACC GU UCCGACC
+        3'-GA     ----   U  G       A-5'
+             |                     |
+            20                     2
+hsa-miR-6849-3p
+
+interaction energy = -21.93 kcal/mol
+
+
+
+MICA_UTR_126
+          2010             2024
+             |             |
+5'-AGA...CCCA       G       CAGA...AUU-3'
+             GGGUCAG UCAGGUG
+             +++++++ +++++++
+             CCCGGUC GGUCCAC
+    3'-GACCCG       -       U-5'
+             |             |
+            15             2
+hsa-miR-6765-3p
+
+interaction energy = -15.7 kcal/mol
+
+
+
+MICA_UTR_126
+          1996                           2024
+             |                           |
+5'-AGA...AGCA     G   UCCCAGGGUC  G       CAGA...AUU-3'
+             AGGUG GGG          AG UCAGGUG
+             |||:: |||          || +++++++
+             UCCGU CCC          UC AGUCCAC
+         3'-G     G   ----------  G       U-5'
+             |                           |
+            20                           2
+hsa-miR-3622b-3p
+
+interaction energy = -12.94 kcal/mol
+
+
+
+MICA_UTR_126
+          1033             1047
+             |             |
+5'-AGA...UUCC   ACA         UUUG...AUU-3'
+             CCU   GUCAGGUUG
+             |||   +++++++++
+             GGA   CAGUCCGAC
+     3'-GACAA   ---         -5'
+             |             |
+            12             1
+hsa-miR-4293
+
+interaction energy = -12.1 kcal/mol
+
+
+
+MICA_UTR_129
+          2645                2662
+             |                |
+5'-AGA...GCCA                  CUCU...AUU-3'
+             CACAGCUCGGAUUUCAGC
+             ++++++++++++++++++
+             GUGUCGGGCCUGGAGUCG
+        3'-CC                  U-5'
+             |                |
+            19                2
+hsa-miR-7160-5p
+
+interaction energy = -24.54 kcal/mol
+
+
+
+MICA_UTR_128
+          1423              1438
+             |              |
+5'-AGA...AAGU     U          CAAA...AUU-3'
+             UCAUG GCCAGUUUCU
+             |||:| ++++++++++
+             AGUGC CGGUCGGAGA
+   3'-CUUAAGU     -          -5'
+             |              |
+            15              1
+hsa-miR-485-5p
+
+interaction energy = -18.62 kcal/mol

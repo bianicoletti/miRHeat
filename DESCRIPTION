@@ -2,21 +2,36 @@ Package: miRHeat
 Type: Package
 Title: Tools for miRNA–UTR Interaction Filtering and Visualization
 Version: 0.1.0
-Authors@R: c(
-    person(
-       "Maria", "Nicoletti",
-      email = "maria.nicoeltti@unesp.br",
-      role = c("aut", "cre")
+Authors@R: 
+    c(
+      person(
+        given = "Maria",
+        family = "Nicoletti",
+        email = "maria.nicoeltti@unesp.br",
+        role = c("aut", "cre")
+      )
     )
-  )
-Description: The miRHeat package provides functions to process and visualize miRNA–UTR 
-    interaction predictions. It includes tools to filter RNAhybrid or IntaRNA 
-    output files based on interaction energy thresholds and seed pairing criteria,
-    and to convert filtered results into tidy data frames and heatmaps for 
-    comparative visualization. 
+Description: Tools to process, filter and visualize miRNA–UTR interaction predictions.
+    Includes functions to parse RNAhybrid or IntaRNA output files, filter by
+    interaction energy and seed pairing, and convert results into tidy data frames
+    and heatmaps for comparative visualization.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/bianicoletti/miRHeat
 BugReports: https://github.com/bianicoletti/miRHeat/issues
 RoxygenNote: 7.3.3
+Imports:
+    utils,
+    stats,
+    tools,
+    stringr,
+    dplyr,
+    tidyr,
+    ggplot2,
+    tibble
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
