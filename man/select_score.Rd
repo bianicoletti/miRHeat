@@ -4,23 +4,8 @@
 \alias{select_score}
 \title{Seleciona qual coluna numérica será usada como Score}
 \usage{
-select_score(df, score_name = NULL)
-}
-\arguments{
-\item{df}{Data.frame de entradas.}
-
-\item{score_name}{Nome da coluna a ser usada como score. Se NULL, abre prompt interativo.}
-}
-\value{
-Data.frame com coluna `Score` (numeric) e atributo score_name.
+select_score(df, score_column = NULL)
 }
 \description{
-Recebe um data.frame produzido por parse_file() e permite escolher interativamente
-ou por nome qual coluna numérica será renomeada para `Score`. Retorna o data.frame
-com coluna `Score` adicionada e attr `score_name` guardada.
-}
-\examples{
-\dontrun{
-df2 <- select_score(df, score_name = "interaction_energy")
-}
+Seleciona qual coluna numérica será usada como Score
 }
