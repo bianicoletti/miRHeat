@@ -19,3 +19,4 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/bianicoletti/miRHeat
 BugReports: https://github.com/bianicoletti/miRHeat/issues
+RoxygenNote: 7.3.3
