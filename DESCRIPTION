@@ -25,11 +25,10 @@ Imports:
     utils,
     stats,
     tools,
-    stringr,
-    dplyr,
-    tidyr,
-    ggplot2,
-    tibble
+    ComplexHeatmap,
+    circlize,
+    dynamicTreeCut,
+    reshape2
 Suggests:
     testthat (>= 3.0.0),
     knitr,

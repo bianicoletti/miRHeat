@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{parse_file}
 \alias{parse_file}
-\title{Parse de arquivo de interações (TXT em blocos ou CSV/TSV)}
+\title{Parse de arquivo de interacoes (TXT em blocos ou CSV/TSV)}
 \usage{
 parse_file(
   file,
@@ -15,20 +15,20 @@ parse_file(
 \arguments{
 \item{file}{Path para o arquivo de entrada.}
 
-\item{pattern}{String. Padrão regex para detectar início de bloco (default '^.*_UTR_.*').}
+\item{pattern}{String. Padrao regex para detectar inicio de bloco (default '^.*_UTR_.*').}
 
-\item{guess_tabular}{Logical. Se TRUE, tenta detectar automaticamente se o arquivo é tabular.}
+\item{guess_tabular}{Logical. Se TRUE, tenta detectar automaticamente se o arquivo e tabular.}
 
-\item{mirna_col}{Optional character. Nome da coluna que contém miRNAs (aplica-se a arquivos tabulares).}
+\item{mirna_col}{Optional character. Nome da coluna que contem miRNAs (aplica-se a arquivos tabulares).}
 
-\item{target_col}{Optional character. Nome da coluna que contém targets/genes (aplica-se a arquivos tabulares).}
+\item{target_col}{Optional character. Nome da coluna que contem targets/genes (aplica-se a arquivos tabulares).}
 }
 \value{
-Um data.frame com colunas extraídas (miRNA, target, gene, utr e quaisquer valores numéricos detectados).
+Um data.frame com colunas extraidas (miRNA, target, gene, utr e quaisquer valores numericos detectados).
 }
 \description{
-Lê um arquivo de interações (formato em blocos tipo RNAhybrid/IntaRNA ou
-arquivo tabular CSV/TSV). Para arquivos TXT em blocos assume o padrão informado:
+Le um arquivo de interacoes (formato em blocos tipo RNAhybrid/IntaRNA ou
+arquivo tabular CSV/TSV). Para arquivos TXT em blocos assume o padrao informado:
 uma linha com identificador do tipo `GENE_UTR_123`, seguida por linhas de alinhamento,
 uma linha com o miRNA (ex: `hsa-miR-7160-5p`) e pelo menos uma linha com `chave = valor`
 (ex: `interaction energy = -24.54 kcal/mol`).

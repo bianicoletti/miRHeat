@@ -2,16 +2,16 @@
 % Please edit documentation in R/functions.R
 \name{apply_numeric_filters}
 \alias{apply_numeric_filters}
-\title{Aplica filtros numéricos ao Score}
+\title{Aplica filtros numericos ao Score}
 \usage{
 apply_numeric_filters(df, min_value = NULL, max_value = NULL, remove_na = TRUE)
 }
 \arguments{
 \item{df}{Data.frame com coluna `Score`.}
 
-\item{min_value}{Numeric or NULL. Mantém Score >= min_value se fornecido.}
+\item{min_value}{Numeric or NULL. Mantem Score >= min_value se fornecido.}
 
-\item{max_value}{Numeric or NULL. Mantém Score <= max_value se fornecido.}
+\item{max_value}{Numeric or NULL. Mantem Score <= max_value se fornecido.}
 
 \item{remove_na}{Logical. Se TRUE remove linhas com Score NA.}
 }

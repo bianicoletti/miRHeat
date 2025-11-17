@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{plot_mirheat}
 \alias{plot_mirheat}
-\title{Plot Heatmap for miRNA–UTR Interactions}
+\title{Plot Heatmap for miRNA-UTR Interactions}
 \usage{
 plot_mirheat(df, output_file = NULL, width = 2000, height = 1800)
 }
@@ -19,7 +19,7 @@ plot_mirheat(df, output_file = NULL, width = 2000, height = 1800)
 Returns the ComplexHeatmap object invisibly.
 }
 \description{
-Generates a heatmap of miRNA × UTR interaction scores.
+Generates a heatmap of miRNA x UTR interaction scores.
 Automatically determines the optimal number of clusters using
 dynamic tree cutting.
 }

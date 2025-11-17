@@ -1,7 +1,7 @@
-#' Parse de arquivo de interações (TXT em blocos ou CSV/TSV)
+#' Parse de arquivo de interacoes (TXT em blocos ou CSV/TSV)
 #'
-#' Lê um arquivo de interações (formato em blocos tipo RNAhybrid/IntaRNA ou
-#' arquivo tabular CSV/TSV). Para arquivos TXT em blocos assume o padrão informado:
+#' Le um arquivo de interacoes (formato em blocos tipo RNAhybrid/IntaRNA ou
+#' arquivo tabular CSV/TSV). Para arquivos TXT em blocos assume o padrao informado:
 #' uma linha com identificador do tipo `GENE_UTR_123`, seguida por linhas de alinhamento,
 #' uma linha com o miRNA (ex: `hsa-miR-7160-5p`) e pelo menos uma linha com `chave = valor`
 #' (ex: `interaction energy = -24.54 kcal/mol`).
@@ -9,11 +9,12 @@
 #' Para arquivos tabulares, tenta detectar colunas de miRNA e target automaticamente.
 #'
 #' @param file Path para o arquivo de entrada.
-#' @param pattern String. Padrão regex para detectar início de bloco (default '^.*_UTR_.*').
-#' @param guess_tabular Logical. Se TRUE, tenta detectar automaticamente se o arquivo é tabular.
-#' @param mirna_col Optional character. Nome da coluna que contém miRNAs (aplica-se a arquivos tabulares).
-#' @param target_col Optional character. Nome da coluna que contém targets/genes (aplica-se a arquivos tabulares).
-#' @return Um data.frame com colunas extraídas (miRNA, target, gene, utr e quaisquer valores numéricos detectados).
+#' @param pattern String. Padrao regex para detectar inicio de bloco (default '^.*_UTR_.*').
+#' @param guess_tabular Logical. Se TRUE, tenta detectar automaticamente se o arquivo e tabular.
+#' @param mirna_col Optional character. Nome da coluna que contem miRNAs (aplica-se a arquivos tabulares).
+#' @param target_col Optional character. Nome da coluna que contem targets/genes (aplica-se a arquivos tabulares).
+#' @return Um data.frame com colunas extraidas (miRNA, target, gene, utr e quaisquer valores numericos detectados).
+#' @importFrom stats setNames
 #' @examples
 #' \dontrun{
 #' file <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
@@ -222,20 +223,22 @@ parse_file <- function(file,
 }
 
 
-#' Seleciona qual coluna numérica será usada como Score
+#' Seleciona qual coluna numerica sera usada como Score
 #'
-#' Detecta automaticamente colunas numéricas e define a coluna selecionada como
+#' Detecta automaticamente colunas numericas e define a coluna selecionada como
 #' nova coluna `Score` no data.frame retornado. Evita interatividade: se houver
-#' múltiplas colunas numéricas requer que `score_column` seja fornecido.
+#' multiplas colunas numericas requer que `score_column` seja fornecido.
 #'
 #' @param df Data.frame (geralmente resultado de parse_file()).
-#' @param score_column Character or NULL. Nome da coluna numérica a usar como Score.
-#'                     Se NULL e apenas uma coluna numérica existir, ela será usada automaticamente.
+#' @param score_column Character or NULL. Nome da coluna numerica a usar como Score.
+#'                     Se NULL e apenas uma coluna numerica existir, ela sera usada automaticamente.
 #' @return Data.frame com nova coluna `Score`.
 #' @examples
 #' df <- data.frame(miRNA = c("a","b"), target = c("T1","T2"), energy = c(-10, -20))
 #' select_score(df) # usa energy automaticamente
 #' @export
+
+
 select_score <- function(df, score_column = NULL) {
   if (!is.data.frame(df)) {
     stop("df deve ser um data.frame produzido por parse_file().")
@@ -278,13 +281,13 @@ select_score <- function(df, score_column = NULL) {
 }
 
 
-#' Aplica filtros numéricos ao Score
+#' Aplica filtros numericos ao Score
 #'
 #' Filtra o data.frame para manter apenas linhas com Score dentro dos limites.
 #'
 #' @param df Data.frame com coluna `Score`.
-#' @param min_value Numeric or NULL. Mantém Score >= min_value se fornecido.
-#' @param max_value Numeric or NULL. Mantém Score <= max_value se fornecido.
+#' @param min_value Numeric or NULL. Mantem Score >= min_value se fornecido.
+#' @param max_value Numeric or NULL. Mantem Score <= max_value se fornecido.
 #' @param remove_na Logical. Se TRUE remove linhas com Score NA.
 #' @return Data.frame filtrado.
 #' @examples
@@ -351,10 +354,10 @@ prepare_for_heatmap <- function(df) {
 }
 
 
-#' Plot Heatmap for miRNA–UTR Interactions
+#' Plot Heatmap for miRNA-UTR Interactions
 #'
 #' @description
-#' Generates a heatmap of miRNA × UTR interaction scores.
+#' Generates a heatmap of miRNA x UTR interaction scores.
 #' Automatically determines the optimal number of clusters using
 #' dynamic tree cutting.
 #'

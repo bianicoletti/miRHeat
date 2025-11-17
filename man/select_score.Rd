@@ -2,23 +2,23 @@
 % Please edit documentation in R/functions.R
 \name{select_score}
 \alias{select_score}
-\title{Seleciona qual coluna numérica será usada como Score}
+\title{Seleciona qual coluna numerica sera usada como Score}
 \usage{
 select_score(df, score_column = NULL)
 }
 \arguments{
 \item{df}{Data.frame (geralmente resultado de parse_file()).}
 
-\item{score_column}{Character or NULL. Nome da coluna numérica a usar como Score.
-Se NULL e apenas uma coluna numérica existir, ela será usada automaticamente.}
+\item{score_column}{Character or NULL. Nome da coluna numerica a usar como Score.
+Se NULL e apenas uma coluna numerica existir, ela sera usada automaticamente.}
 }
 \value{
 Data.frame com nova coluna `Score`.
 }
 \description{
-Detecta automaticamente colunas numéricas e define a coluna selecionada como
+Detecta automaticamente colunas numericas e define a coluna selecionada como
 nova coluna `Score` no data.frame retornado. Evita interatividade: se houver
-múltiplas colunas numéricas requer que `score_column` seja fornecido.
+multiplas colunas numericas requer que `score_column` seja fornecido.
 }
 \examples{
 df <- data.frame(miRNA = c("a","b"), target = c("T1","T2"), energy = c(-10, -20))
