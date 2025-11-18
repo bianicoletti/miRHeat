@@ -244,42 +244,51 @@ select_score <- function(df, score_column = NULL) {
     stop("df deve ser um data.frame produzido por parse_file().")
   }
 
-  # Descobre automaticamente colunas numéricas, exceto colunas chave
+  # Caso o usuário forneça a coluna explicitamente
+  if (!is.null(score_column)) {
+
+    # 1. Verifica se existe
+    if (!score_column %in% names(df)) {
+      stop("Coluna especificada não encontrada: '", score_column, "'.")
+    }
+
+    # 2. Verifica se é numérica
+    if (!is.numeric(df[[score_column]])) {
+      stop("A coluna especificada não é numérica: '", score_column, "'.")
+    }
+
+    df$Score <- df[[score_column]]
+    return(df)
+  }
+
+  # ---- Caso score_column seja NULL → detecção automática ----
+
+  # descobre colunas numéricas
   numeric_cols <- names(df)[sapply(df, is.numeric)]
   numeric_cols <- setdiff(numeric_cols, c("utr", "target", "miRNA", "gene"))
 
+  # Nenhuma coluna numérica
   if (length(numeric_cols) == 0) {
     stop("Nenhuma coluna numérica encontrada para ser usada como Score.")
   }
 
-  # Se o usuário não informou a coluna, mas só existe uma → usar ela
-  if (is.null(score_column)) {
-    if (length(numeric_cols) == 1) {
-      score_column <- numeric_cols[1]
-      message("Usando automaticamente a única coluna numérica encontrada: ", score_column)
-    } else {
-      stop(
-        paste0(
-          "Existem múltiplas colunas numéricas: ",
-          paste(numeric_cols, collapse = ", "),
-          ". Especifique qual deseja usar com score_column = \"nome_da_coluna\"."
-        )
-      )
-    }
+  # Única coluna numérica → usar ela
+  if (length(numeric_cols) == 1) {
+    score_column <- numeric_cols[1]
+    message("Usando automaticamente a única coluna numérica encontrada: ", score_column)
+    df$Score <- df[[score_column]]
+    return(df)
   }
 
-  # Verifica se o nome existe e é numérico
-  if (!score_column %in% names(df)) {
-    stop("Coluna selecionada não encontrada no data.frame: '", score_column, "'.")
-  }
-  if (!is.numeric(df[[score_column]])) {
-    stop("A coluna selecionada não é numérica: '", score_column, "'.")
-  }
-
-  df$Score <- df[[score_column]]
-  return(df)
+  # múltiplas colunas numéricas
+  stop(
+    paste0(
+      "Existem múltiplas colunas numéricas: ",
+      paste(numeric_cols, collapse = ", "),
+      ". Especifique qual deseja usar com score_column = \"nome_da_coluna\"."
+    )
+  )
 }
-
 
 #' Aplica filtros numericos ao Score
 #'
