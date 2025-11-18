@@ -2,10 +2,9 @@
 title: "Introdução ao miRHeat: do arquivo ao heatmap"
 output: rmarkdown::html_vignette
 vignette: >
-   %\VignetteIndexEntry{Introdução ao miRHeat}
+  %\VignetteIndexEntry{Introdução ao miRHeat}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  
 ---
 
 ```{r, include = FALSE}
