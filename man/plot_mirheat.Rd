@@ -2,26 +2,26 @@
 % Please edit documentation in R/functions.R
 \name{plot_mirheat}
 \alias{plot_mirheat}
-\title{Plot Heatmap for miRNA-UTR Interactions}
+\title{Gera Heatmap de Interacoes miRNA x UTR}
 \usage{
 plot_mirheat(df, output_file = NULL, width = 2000, height = 1800)
 }
 \arguments{
-\item{df}{Data frame containing miRNA, UTR (or utr column) and Score columns.}
+\item{df}{Data frame contendo as colunas miRNA, UTR (ou utr) e Score.}
 
-\item{output_file}{Optional path to export PNG (default = NULL).}
+\item{output_file}{Caminho opcional para exportar o PNG (padrao = NULL).}
 
-\item{width}{Width of PNG if exporting (in pixels).}
+\item{width}{Largura do PNG ao exportar (em pixels).}
 
-\item{height}{Height of PNG if exporting (in pixels).}
+\item{height}{Altura do PNG ao exportar (em pixels).}
 }
 \value{
-Returns the ComplexHeatmap object invisibly.
+Retorna invisivelmente o objeto ComplexHeatmap.
 }
 \description{
-Generates a heatmap of miRNA x UTR interaction scores.
-Automatically determines the optimal number of clusters using
-dynamic tree cutting.
+Gera um heatmap dos scores de interacao entre miRNA e UTR.
+Determina automaticamente o numero ideal de clusters usando
+corte dinamico de arvores (dynamic tree cutting).
 }
 \examples{
 \dontrun{

@@ -79,11 +79,11 @@ parse_file <- function(file,
           "Nao foi possivel identificar automaticamente as colunas tabulares necessarias: ",
           paste(missing, collapse = ", "),
           ". Colunas detectadas: ", paste(nms, collapse = ", "),
-          ".\nSolução: reexporte o arquivo com cabecalho claro ou chame parse_file(..., mirna_col = 'nome', target_col = 'nome')."
+          ".\nSolucao: reexporte o arquivo com cabecalho claro ou chame parse_file(..., mirna_col = 'nome', target_col = 'nome')."
         )
       }
 
-      # detecta colunas numericas que pareçam scores (exceto colunas chave)
+      # detecta colunas numericas que parecam scores (exceto colunas chave)
       score_col <- setdiff(nms[vapply(df_tab, is.numeric, logical(1))], c(mirna_col, target_col))
 
       df_out <- data.frame(
@@ -92,7 +92,7 @@ parse_file <- function(file,
         stringsAsFactors = FALSE
       )
 
-      # anexa colunas numéricas detectadas (scores)
+      # anexa colunas numericas detectadas (scores)
       for (sc in score_col) {
         out_name <- clean_name(sc)
         # evita sobrescrever colunas base
@@ -115,9 +115,9 @@ parse_file <- function(file,
   indices_fim <- c((indices_inicio[-1] - 1), length(linhas))
   blocos <- Map(function(i, f) linhas[i:f], indices_inicio, indices_fim)
 
-  # funcoes auxiliares de extração
+  # funcoes auxiliares de extracao
   extrai_miRNA <- function(bloco) {
-    # procura padrões como hsa-miR-..., miR-..., miRNA-..., miR...
+    # procura padroes como hsa-miR-..., miR-..., miRNA-..., miR...
     pat <- "(?:hsa-)?(?:miR|miRNA)[-A-Za-z0-9_]+"
     hit <- unique(unlist(regmatches(bloco, gregexpr(pat, bloco, ignore.case = TRUE))))
     if (length(hit) >= 1 && nzchar(hit[1])) {
@@ -142,7 +142,7 @@ parse_file <- function(file,
       utrid <- ifelse(length(mm) >= 3 && nzchar(mm[3]), mm[3], NA_character_)
       return(list(gene = toupper(gene), utr = utrid, target = ifelse(is.na(utrid), gene, paste0(gene, "_UTR_", utrid))))
     } else {
-      # se não bater, usa toda a primeira linha como target bruto
+      # se nao bater, usa toda a primeira linha como target bruto
       return(list(gene = txt, utr = NA_character_, target = txt))
     }
   }
@@ -182,8 +182,8 @@ parse_file <- function(file,
     rows[[i]] <- c(list(miRNA = mi, target = target_info$target, gene = target_info$gene, utr = target_info$utr), pairs)
   }
 
-  # une em data.frame (preenchendo NA onde necessário)
-  # coletar todos nomes possíveis
+  # une em data.frame (preenchendo NA onde necessario)
+  # coletar todos nomes possiveis
   all_names <- unique(unlist(lapply(rows, names)))
   df_list <- lapply(rows, function(x) {
     # garante que todos os nomes existam e sejam NA se ausentes
@@ -201,14 +201,14 @@ parse_file <- function(file,
 
   # Converter colunas "other" que parecem numericas
   for (nm in other_cols) {
-    # se toda a coluna for NA ou números no formato, converte
+    # se toda a coluna for NA ou numeros no formato, converte
     vals_chr <- as.character(df[[nm]])
     if (all(is.na(vals_chr) | grepl("^\\s*-?[0-9]+\\.?[0-9]*(?:[eE][-+]?[0-9]+)?\\s*$", vals_chr))) {
       df[[nm]] <- as.numeric(vals_chr)
     }
   }
 
-  # renomeia target para target (já OK) e organiza colunas
+  # renomeia target para target e organiza colunas
   # padroniza nomes: se existir 'target' ok; se estiver 'target_raw', renomeia
   if ("target_raw" %in% names(df) && !("target" %in% names(df))) {
     names(df)[names(df) == "target_raw"] <- "target"
@@ -244,17 +244,17 @@ select_score <- function(df, score_column = NULL) {
     stop("df deve ser um data.frame produzido por parse_file().")
   }
 
-  # Caso o usuario forneça a coluna explicitamente
+  # Caso o usuario forneca a coluna explicitamente
   if (!is.null(score_column)) {
 
     # 1. Verifica se existe
     if (!score_column %in% names(df)) {
-      stop("Coluna especificada não encontrada: '", score_column, "'.")
+      stop("Coluna especificada nao encontrada: '", score_column, "'.")
     }
 
-    # 2. Verifica se e numérica
+    # 2. Verifica se e numerica
     if (!is.numeric(df[[score_column]])) {
-      stop("A coluna especificada não é numérica: '", score_column, "'.")
+      stop("A coluna especificada nao e numerica: '", score_column, "'.")
     }
 
     df$Score <- df[[score_column]]
@@ -272,7 +272,7 @@ select_score <- function(df, score_column = NULL) {
     stop("Nenhuma coluna numerica encontrada para ser usada como Score.")
   }
 
-  # unica coluna numerica → usar ela
+  # unica coluna numerica, usar ela
   if (length(numeric_cols) == 1) {
     score_column <- numeric_cols[1]
     message("Usando automaticamente a unica coluna numerica encontrada: ", score_column)
@@ -399,9 +399,9 @@ plot_mirheat <- function(df,
     df <- prepare_for_heatmap(df)
   }
 
-  message("→ Construindo matriz miRNA × UTR...")
+  message("Construindo matriz miRNA UTR...")
 
-  # Reformat usando namespace explícito
+  # Reformat usando namespace explicito
   matriz <- reshape2::dcast(df, miRNA ~ utr, value.var = "Score")
   # dcast cria miRNA como coluna; movemos para rownames
   rownames(matriz) <- matriz$miRNA
@@ -421,7 +421,7 @@ plot_mirheat <- function(df,
   d_miRNA <- stats::dist(matriz)
   hc_miRNA <- stats::hclust(d_miRNA, method = "ward.D2")
 
-  message("→ Detectando automaticamente numero de clusters...")
+  message("Detectando automaticamente numero de clusters...")
 
   clusters <- dynamicTreeCut::cutreeDynamic(
     dendro = hc_miRNA,
@@ -431,7 +431,7 @@ plot_mirheat <- function(df,
   )
 
   n_clusters <- length(unique(clusters))
-  message(sprintf("→ Numero detectado: %d clusters.", n_clusters))
+  message(sprintf("Numero detectado: %d clusters.", n_clusters))
 
   # Annotations
   heatmap_annotation <- ComplexHeatmap::HeatmapAnnotation(
@@ -462,12 +462,12 @@ plot_mirheat <- function(df,
 
   # Export PNG if requested
   if (!is.null(output_file)) {
-    message("→ Exportando heatmap para: ", output_file)
+    message("Exportando heatmap para: ", output_file)
     grDevices::png(output_file, width = width, height = height, res = 200)
     ComplexHeatmap::draw(ht)
     grDevices::dev.off()
   }
 
-  message("→ Heatmap pronto!")
+  message("Heatmap pronto!")
   invisible(ht)
 }
