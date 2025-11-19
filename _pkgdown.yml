@@ -1,0 +1,36 @@
+# ----------------------------
+# Configuração do site pkgdown
+# ----------------------------
+
+# Template e Bootstrap
+template:
+  bootstrap: 5
+
+# Navbar (menu superior)
+navbar:
+  title: "miRHeat"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Vignettes"
+      menu:
+        - text: "Introdução ao miRHeat"
+          href: articles/intro.html
+    - text: "Funções"
+      href: reference/index.html
+
+# Referência de funções
+reference:
+  - parse_file
+  - select_score
+  - apply_numeric_filters
+  - prepare_for_heatmap
+  - plot_mirheat
+
+# Artigos (vignettes)
+articles:
+  - intro
+
+# Favicon e metadata (opcional)
+favicon: pkgdown/favicon.png
+url: "" # se for publicar em GitHub Pages, coloque a URL do site
