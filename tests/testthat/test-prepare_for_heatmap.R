@@ -16,7 +16,7 @@ test_that("prepare_for_heatmap() exige coluna Score", {
 # ------------------------------------------------------------------
 # Target já existente
 # ------------------------------------------------------------------
-test_that("prepare_for_heatmap() mantém target se ele já existe", {
+test_that("prepare_for_heatmap() mantem target se ele ja existe", {
   df <- data.frame(
     miRNA = "a",
     target = "G1_UTR_1",

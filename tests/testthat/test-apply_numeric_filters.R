@@ -1,4 +1,4 @@
-test_that("apply_numeric_filters lança erro se df não é data.frame", {
+test_that("apply_numeric_filters lança erro se df nao e data.frame", {
   expect_error(apply_numeric_filters(NULL), "data.frame")
 })
 
@@ -7,7 +7,7 @@ test_that("apply_numeric_filters lança erro se falta a coluna Score", {
   expect_error(apply_numeric_filters(df), "Score")
 })
 
-test_that("apply_numeric_filters remove NA por padrão", {
+test_that("apply_numeric_filters remove NA por padrao", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, NA, -30)
@@ -19,7 +19,7 @@ test_that("apply_numeric_filters remove NA por padrão", {
   expect_false(any(is.na(out$Score)))
 })
 
-test_that("apply_numeric_filters mantém NA quando remove_na = FALSE", {
+test_that("apply_numeric_filters mantem NA quando remove_na = FALSE", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, NA, -30)
@@ -67,7 +67,7 @@ test_that("apply_numeric_filters aplica min_value e max_value juntos", {
   expect_equal(out$Score, c(-15, -25))
 })
 
-test_that("apply_numeric_filters mantém as demais colunas intactas", {
+test_that("apply_numeric_filters mantem as demais colunas intactas", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     target = c("T1", "T2", "T3"),

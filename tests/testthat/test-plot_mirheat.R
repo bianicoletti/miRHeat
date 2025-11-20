@@ -11,7 +11,7 @@ test_that("plot_mirheat() valida entradas corretamente", {
   expect_error(plot_mirheat(df2), "Score")
 })
 
-test_that("plot_mirheat() funciona com entrada mínima", {
+test_that("plot_mirheat() funciona com entrada minima", {
   df <- data.frame(
     miRNA = c("mir1", "mir2"),
     utr = c("1", "2"),
@@ -38,7 +38,7 @@ test_that("plot_mirheat() cria target automaticamente via prepare_for_heatmap", 
   expect_true(inherits(plot_mirheat(df), "Heatmap"))
 })
 
-test_that("plot_mirheat() gera arquivo PNG quando output_file é fornecido", {
+test_that("plot_mirheat() gera arquivo PNG quando output_file e fornecido", {
   df <- data.frame(
     miRNA = c("mir1", "mir2"),
     utr = c("1", "2"),

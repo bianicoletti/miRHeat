@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 inst/doc
+^docs$
+^README.html$
+^_pkgdown.yml$
