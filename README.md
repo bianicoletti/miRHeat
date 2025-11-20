@@ -1,7 +1,7 @@
 README
 ================
 
-# 📄 **README — Pipeline de Interação miRNA–UTR**
+# 📄 **README — Pipeline de Interação miRNA–UTR**  <img src="man/figures/logo_miRHeat.png" align="right" width="160"/>
 
 ## 🧬 **Descrição Geral**
 
