@@ -5,6 +5,7 @@
 # Template e Bootstrap
 template:
   bootstrap: 5
+  bootswatch: minty
 
 # Navbar (menu superior)
 navbar:
@@ -21,16 +22,20 @@ navbar:
 
 # Referência de funções
 reference:
-  - parse_file
-  - select_score
-  - apply_numeric_filters
-  - prepare_for_heatmap
-  - plot_mirheat
+  - title: "Funções principais"
+    contents:
+      - parse_file
+      - select_score
+      - apply_numeric_filters
+      - prepare_for_heatmap
+      - plot_mirheat
 
 # Artigos (vignettes)
 articles:
-  - intro
+  - title: "Tutoriais"
+    contents:
+      - intro
 
-# Favicon e metadata (opcional)
+# Favicon e metadata
 favicon: pkgdown/favicon.png
-url: "" # se for publicar em GitHub Pages, coloque a URL do site
+url: "https://github.com/bianicoletti/miRHeat"
