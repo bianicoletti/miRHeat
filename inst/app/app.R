@@ -1,3 +1,14 @@
+# Instala o pacote miRHeat do GitHub caso não esteja disponível
+if (!requireNamespace("miRHeat", quietly = TRUE)) {
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+  }
+  remotes::install_github("bianicoletti/miRHeat")
+}
+
+library(miRHeat)
+
+
 library(shiny)
 library(DT)
 library(bslib)
@@ -6,33 +17,21 @@ library(miRHeat)
 ui <- fluidPage(
   theme = bs_theme(version = 5, bootswatch = "minty"),
 
-  titlePanel("App do miRHEat - parse_file()"),
+  titlePanel("App do miRHeat - parse_file()"),
 
   sidebarLayout(
 
     sidebarPanel(
       h4("Configurações de entrada"),
-
-      fileInput(
-        "file",
-        "Escolha um arquivo",
-        placeholder = "Selecione um arquivo .txt, .csv, .tsv, etc."
-      ),
+      fileInput("file", "Escolha um arquivo",
+                placeholder = "Selecione um arquivo .txt, .csv, .tsv, etc."),
       helpText("Carregue o arquivo que deseja processar. O app tentará identificar automaticamente seu formato."),
-
-      textInput(
-        "pattern",
-        "Pattern (regex)",
-        value = "^.*_UTR_.*",
-        placeholder = "^.*_UTR_.*"
-      ),
+      textInput("pattern", "Pattern (regex)", value = "^.*_UTR_.*",
+                placeholder = "^.*_UTR_.*"),
       helpText("Padrão usado para filtrar colunas/linhas via expressão regular (regex)."),
-
       checkboxInput("guess", "Detectar formato automaticamente", TRUE),
       helpText("Se ativado, o app tentará reconhecer automaticamente o formato tabular."),
-
       hr(),
-
       h4("Sobre o app"),
       helpText("Este aplicativo demonstra o uso da função parse_file() do pacote."),
       helpText("Ele permite:"),
@@ -45,14 +44,23 @@ ui <- fluidPage(
     ),
 
     mainPanel(
-      h4("Prévia dos dados processados"),
-      helpText("Os dados aparecerão aqui após o upload."),
-      DTOutput("table"),
-      br(),
-      uiOutput("msg")  # área para mensagens adicionais
-    )
-  )
-)
+      tabsetPanel(
+        tabPanel(
+          "Tabela",
+          h4("Prévia dos dados processados"),
+          helpText("Os dados aparecerão aqui após o upload."),
+          DTOutput("table"),
+          br(),
+          uiOutput("msg")
+        ),
+        tabPanel(
+          "About",
+          includeMarkdown("about.md")
+        )
+      )
+    )  # fecha mainPanel
+  )  # fecha sidebarLayout
+)  # fecha fluidPage
 
 server <- function(input, output, session) {
 

@@ -7,3 +7,4 @@ run_app <- function() {
   if (app_dir == "") stop("Nao foi possivel encontrar a pasta do app dentro do pacote.")
   shiny::runApp(app_dir)
 }
+

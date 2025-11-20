@@ -1,0 +1,10 @@
+name: miRHeatApp
+title:
+username: bianicoletti
+account: bianicoletti
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16126225
+bundleId: 11207795
+url: https://bianicoletti.shinyapps.io/miRHeatApp/
+version: 1
