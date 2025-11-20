@@ -1,6 +1,6 @@
 ---
 title: "README"
-output: html_document
+output: github_document
 ---
 
 # 📄 **README — Pipeline de Interação miRNA–UTR**

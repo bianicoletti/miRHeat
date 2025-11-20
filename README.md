@@ -1,0 +1,94 @@
+README
+================
+
+# 📄 **README — Pipeline de Interação miRNA–UTR**
+
+## 🧬 **Descrição Geral**
+
+Este repositório contém um pipeline completo para análise de interações
+miRNA–UTR a partir de arquivos de blocos. O workflow inclui parsing do
+arquivo, padronização dos dados, aplicação de filtros, criação de matriz
+miRNA × UTR e geração automatizada de heatmaps com detecção de clusters
+a partir do dendrograma.
+
+O objetivo é facilitar a triagem de interações biologicamente relevantes
+e a visualização de padrões de ligação.
+
+## 🚀 **Funcionalidades Principais**
+
+- **Leitura e parsing** de arquivos de interações (`parse_file`)
+- **Seleção de score** desejado para análise (`select_score`)
+- **Filtros numéricos** personalizados para valores mínimos de
+  energia/score (`apply_numeric_filters`)
+- **Preparação dos dados** para heatmap (`prepare_for_heatmap`)
+- **Geração de matriz miRNA × UTR**
+- **Heatmap completamente automatizado**, com:
+  - clustering hierárquico
+  - escolha automática do número ideal de clusters via dendrograma
+    (`dynamicTreeCut`)
+- Mensagens informativas durante todo o processo
+
+## 📦 **Dependências**
+
+Instale os seguintes pacotes antes de rodar:
+
+``` r
+install.packages(c(
+  "tidyverse",
+  "reshape2",
+  "pheatmap",
+  "dynamicTreeCut"
+))
+```
+
+## 🛠️ **Como usar o pipeline**
+
+### 1. Carregue o script principal
+
+``` r
+source("pipeline_mirna_utr.R")
+```
+
+### 2. Execute o workflow básico
+
+``` r
+df <- parse_file("exemplo_blocos.txt")
+df <- select_score(df, score_column = "interaction_energy")
+df <- apply_numeric_filters(df, min_value = -8)
+df <- prepare_for_heatmap(df)
+
+plot_mirheat(df)
+```
+
+O heatmap será exibido automaticamente, com número de clusters detectado
+de forma dinâmica.
+
+## 📊 **Exemplo de Saída**
+
+- Matriz miRNA × UTR normalizada
+- Heatmap colorido com dendrogramas
+- Divisão automática em clusters
+
+## 📁 **Estrutura Recomendada do Repositório**
+
+    /mirna-utr-pipeline
+     ├─ pipeline_mirna_utr.R
+     ├─ exemplo_blocos.txt
+     ├─ outputs/
+     │    ├─ heatmap.png (opcional)
+     │    └─ matriz_mirna_utr.csv
+     ├─ README.md
+     └─ LICENSE (opcional)
+
+## 🔍 **Notas Importantes**
+
+- O pipeline assume que a coluna `utr` contém apenas o número da posição
+  da UTR.  
+- O método de clustering é totalmente automático, mas pode ser ajustado
+  manualmente se necessário.
+- O pipeline funciona melhor com datasets moderados (centenas a milhares
+  de interações).
+
+## 📄 **Licença**
+
+MIT License (simples e aberta)
