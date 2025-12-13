@@ -1,5 +1,6 @@
 # Articles
 
-### Tutoriais
+### Tutorials
 
-- [Introdução ao miRHeat: do arquivo ao heatmap](/articles/intro.md):
+- [Introduction to miRHeat: from input files to
+  heatmap](https://github.com/bianicoletti/miRHeat/articles/intro.md):

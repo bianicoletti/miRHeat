@@ -1,8 +1,8 @@
-# Gera Heatmap de Interacoes miRNA x UTR
+# Generate miRNA × UTR interaction heatmap
 
-Gera um heatmap dos scores de interacao entre miRNA e UTR. Determina
-automaticamente o numero ideal de clusters usando corte dinamico de
-arvores (dynamic tree cutting).
+Generates a heatmap of interaction scores between miRNAs and UTRs.
+Automatically determines the optimal number of clusters using dynamic
+tree cutting.
 
 ## Usage
 
@@ -14,23 +14,23 @@ plot_mirheat(df, output_file = NULL, width = 2000, height = 1800)
 
 - df:
 
-  Data frame contendo as colunas miRNA, UTR (ou utr) e Score.
+  Data.frame containing the columns miRNA, UTR (or utr), and Score.
 
 - output_file:
 
-  Caminho opcional para exportar o PNG (padrao = NULL).
+  Optional path to export the PNG file (default = NULL).
 
 - width:
 
-  Largura do PNG ao exportar (em pixels).
+  Width of the PNG when exporting (in pixels).
 
 - height:
 
-  Altura do PNG ao exportar (em pixels).
+  Height of the PNG when exporting (in pixels).
 
 ## Value
 
-Retorna invisivelmente o objeto ComplexHeatmap.
+Invisibly returns the ComplexHeatmap object.
 
 ## Examples
 

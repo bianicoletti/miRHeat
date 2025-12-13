@@ -1,17 +1,18 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>/404.html</loc></url>
-<url><loc>/articles/index.html</loc></url>
-<url><loc>/articles/intro.html</loc></url>
-<url><loc>/authors.html</loc></url>
-<url><loc>/index.html</loc></url>
-<url><loc>/LICENSE-text.html</loc></url>
-<url><loc>/LICENSE.html</loc></url>
-<url><loc>/reference/apply_numeric_filters.html</loc></url>
-<url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/miRHeat-package.html</loc></url>
-<url><loc>/reference/parse_file.html</loc></url>
-<url><loc>/reference/plot_mirheat.html</loc></url>
-<url><loc>/reference/prepare_for_heatmap.html</loc></url>
-<url><loc>/reference/select_score.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/404.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/articles/index.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/articles/intro.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/authors.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/index.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/LICENSE-text.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/LICENSE.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/apply_numeric_filters.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/index.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/miRHeat-package.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/parse_file.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/plot_mirheat.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/prepare_for_heatmap.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/run_app.html</loc></url>
+<url><loc>https://github.com/bianicoletti/miRHeat/reference/select_score.html</loc></url>
 </urlset>
 

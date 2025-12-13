@@ -1,13 +1,13 @@
 # ----------------------------
-# Configuração do site pkgdown
+# pkgdown site configuration
 # ----------------------------
 
-# Template e Bootstrap
+# Template and Bootstrap
 template:
   bootstrap: 5
   bootswatch: minty
 
-# Navbar (menu superior)
+# Navbar (top menu)
 navbar:
   title: "miRHeat"
   left:
@@ -15,14 +15,14 @@ navbar:
       href: index.html
     - text: "Vignettes"
       menu:
-        - text: "Introdução ao miRHeat"
+        - text: "Introduction to miRHeat"
           href: articles/intro.html
-    - text: "Funções"
+    - text: "Functions"
       href: reference/index.html
 
-# Referência de funções
+# Function reference
 reference:
-  - title: "Funções principais"
+  - title: "Main functions"
     contents:
       - parse_file
       - select_score
@@ -30,12 +30,12 @@ reference:
       - prepare_for_heatmap
       - plot_mirheat
 
-# Artigos (vignettes)
+# Articles (vignettes)
 articles:
-  - title: "Tutoriais"
+  - title: "Tutorials"
     contents:
       - intro
 
-# Favicon e metadata
+# Favicon and metadata
 favicon: pkgdown/favicon.png
 url: "https://github.com/bianicoletti/miRHeat"

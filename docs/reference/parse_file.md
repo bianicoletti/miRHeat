@@ -1,11 +1,12 @@
-# Parse de arquivo de interacoes (TXT em blocos ou CSV/TSV)
+# Parse interaction files (block-formatted TXT or CSV/TSV)
 
-Le um arquivo de interacoes (formato em blocos tipo RNAhybrid/IntaRNA ou
-arquivo tabular CSV/TSV). Para arquivos TXT em blocos assume o padrao
-informado: uma linha com identificador do tipo \`GENE_UTR_123\`, seguida
-por linhas de alinhamento, uma linha com o miRNA (ex:
-\`hsa-miR-7160-5p\`) e pelo menos uma linha com \`chave = valor\` (ex:
-\`interaction energy = -24.54 kcal/mol\`).
+Reads an interaction file either in block format (as produced by
+RNAhybrid/IntaRNA) or as a tabular CSV/TSV file. For block-formatted TXT
+files, the function assumes the following structure: a line with an
+identifier such as \`GENE_UTR_123\`, followed by alignment lines, a line
+containing the miRNA name (e.g. \`hsa-miR-7160-5p\`), and at least one
+line with a \`key = value\` pair (e.g. \`interaction energy = -24.54
+kcal/mol\`).
 
 ## Usage
 
@@ -23,37 +24,37 @@ parse_file(
 
 - file:
 
-  Path para o arquivo de entrada.
+  Path to the input file.
 
 - pattern:
 
-  String. Padrao regex para detectar inicio de bloco (default
-  '^.\*\_UTR\_.\*').
+  Character string. Regular expression pattern used to detect the
+  beginning of a block (default: '^.\*\_UTR\_.\*').
 
 - guess_tabular:
 
-  Logical. Se TRUE, tenta detectar automaticamente se o arquivo e
-  tabular.
+  Logical. If TRUE, the function attempts to automatically detect
+  whether the file is tabular.
 
 - mirna_col:
 
-  Optional character. Nome da coluna que contem miRNAs (aplica-se a
-  arquivos tabulares).
+  Optional character. Name of the column containing miRNAs (applies to
+  tabular files).
 
 - target_col:
 
-  Optional character. Nome da coluna que contem targets/genes (aplica-se
-  a arquivos tabulares).
+  Optional character. Name of the column containing targets/genes
+  (applies to tabular files).
 
 ## Value
 
-Um data.frame com colunas extraidas (miRNA, target, gene, utr e
-quaisquer valores numericos detectados).
+A data.frame containing the extracted columns (miRNA, target, gene, utr,
+and any detected numeric values).
 
 ## Details
 
-Para arquivos tabulares, tenta detectar colunas de miRNA e target
-automaticamente.
+For tabular files, the function attempts to automatically detect miRNA
+and target columns.
 
 ## Examples
 

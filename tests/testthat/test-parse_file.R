@@ -1,4 +1,4 @@
-test_that("parse_file() lê corretamente arquivos em blocos (formato RNAhybrid)", {
+test_that("parse_file() correctly reads block-formatted files", {
   txt <- "
 MICA_UTR_123
 hsa-miR-125a-5p
@@ -27,7 +27,7 @@ p-value = 0.0041
 
 
 
-test_that("parse_file() lê corretamente arquivos CSV com colunas padrão", {
+test_that("parse_file() correctly reads CSV files with standard columns", {
   txt <- "miRNA,target,score
 hsa-miR-34a-5p,MICA_UTR_555,-25.5
 hsa-miR-21-5p,MICA_UTR_555,-18.2"
@@ -46,7 +46,7 @@ hsa-miR-21-5p,MICA_UTR_555,-18.2"
 
 
 
-test_that("parse_file() identifica separador automaticamente", {
+test_that("parse_file() automatically detects the field separator", {
   txt <- "miRNA;target;score
 miR-A;GENE_UTR_1;-10"
   tmp <- tempfile(fileext = ".txt")
@@ -62,14 +62,14 @@ miR-A;GENE_UTR_1;-10"
 
 
 
-test_that("parse_file() falha adequadamente para arquivos inexistentes", {
-  expect_error(parse_file("arquivo_que_nao_existe.txt"))
+test_that("parse_file() fails appropriately for non-existent files", {
+  expect_error(parse_file("file_that_does_not_exist.txt"))
 })
 
 
 
-test_that("parse_file() retorna erro quando nem tabular nem blocos são detectados", {
-  txt <- "isto não deveria ser reconhecido"
+test_that("parse_file() returns an error when neither tabular nor block format is detected", {
+  txt <- "this should not be recognized"
   tmp <- tempfile(fileext = ".txt")
   writeLines(txt, tmp)
 
@@ -78,7 +78,7 @@ test_that("parse_file() retorna erro quando nem tabular nem blocos são detectad
 
 
 
-test_that("parse_file() lida com valores numéricos diferentes por linha", {
+test_that("parse_file() handles different numeric values per block", {
   txt <- "
 GENE_UTR_9
 miR-1
@@ -103,7 +103,7 @@ score2 = -100.3
 
 
 
-test_that("parse_file() não quebra quando uma chave numérica está ausente em alguns blocos", {
+test_that("parse_file() does not break when a numeric key is missing in some blocks", {
   txt <- "
 GENE_UTR_7
 miR-1

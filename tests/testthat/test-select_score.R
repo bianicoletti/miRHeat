@@ -1,4 +1,4 @@
-test_that("select_score usa automaticamente a unica coluna numerica", {
+test_that("select_score automatically uses the single numeric column", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
@@ -7,13 +7,13 @@ test_that("select_score usa automaticamente a unica coluna numerica", {
 
   expect_message(
     out <- select_score(df),
-    "automaticamente"
+    "automatically"
   )
 
   expect_equal(out$Score, df$energy)
 })
 
-test_that("select_score requer score_column quando ha multiplas colunas numericas", {
+test_that("select_score requires score_column when multiple numeric columns exist", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
@@ -23,11 +23,11 @@ test_that("select_score requer score_column quando ha multiplas colunas numerica
 
   expect_error(
     select_score(df),
-    "multiplas colunas numericas"
+    "multiple numeric columns"
   )
 })
 
-test_that("select_score funciona quando score_column e fornecido", {
+test_that("select_score works when score_column is provided", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
@@ -39,7 +39,7 @@ test_that("select_score funciona quando score_column e fornecido", {
   expect_equal(out$Score, df$pvalue)
 })
 
-test_that("select_score lanca erro se score_column nao existir", {
+test_that("select_score throws an error if score_column does not exist", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
@@ -47,12 +47,12 @@ test_that("select_score lanca erro se score_column nao existir", {
   )
 
   expect_error(
-    select_score(df, score_column = "nao_existe"),
-    "nao encontrada"
+    select_score(df, score_column = "does_not_exist"),
+    "not found"
   )
 })
 
-test_that("select_score lanca erro se a coluna nao e numerica", {
+test_that("select_score throws an error if the column is not numeric", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
@@ -61,26 +61,26 @@ test_that("select_score lanca erro se a coluna nao e numerica", {
 
   expect_error(
     select_score(df, score_column = "energy"),
-    "nao e numerica"
+    "not numeric"
   )
 })
 
-test_that("select_score lanca erro quando nao ha colunas numericas", {
+test_that("select_score throws an error when no numeric columns exist", {
   df <- data.frame(
     miRNA = c("a", "b"),
     target = c("T1", "T2"),
-    texto = c("x", "y")
+    text = c("x", "y")
   )
 
   expect_error(
     select_score(df),
-    "Nenhuma coluna numerica"
+    "No numeric column"
   )
 })
 
-test_that("select_score lanca erro se df nao e data.frame", {
+test_that("select_score throws an error if df is not a data.frame", {
   expect_error(
     select_score(NULL),
-    "df deve ser um data.frame"
+    "df must be a data.frame"
   )
 })

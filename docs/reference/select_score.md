@@ -1,9 +1,9 @@
-# Seleciona qual coluna numerica sera usada como Score
+# Select which numeric column will be used as Score
 
-Detecta automaticamente colunas numericas e define a coluna selecionada
-como nova coluna \`Score\` no data.frame retornado. Evita
-interatividade: se houver multiplas colunas numericas requer que
-\`score_column\` seja fornecido.
+Automatically detects numeric columns and defines the selected column as
+a new \`Score\` column in the returned data.frame. Interactivity is
+avoided: if multiple numeric columns are detected, \`score_column\` must
+be explicitly provided.
 
 ## Usage
 
@@ -15,23 +15,24 @@ select_score(df, score_column = NULL)
 
 - df:
 
-  Data.frame (geralmente resultado de parse_file()).
+  Data.frame (usually the output of parse_file()).
 
 - score_column:
 
-  Character or NULL. Nome da coluna numerica a usar como Score. Se NULL
-  e apenas uma coluna numerica existir, ela sera usada automaticamente.
+  Character or NULL. Name of the numeric column to be used as Score. If
+  NULL and only one numeric column exists, it will be used
+  automatically.
 
 ## Value
 
-Data.frame com nova coluna \`Score\`.
+A data.frame with a new \`Score\` column
 
 ## Examples
 
 ``` r
 df <- data.frame(miRNA = c("a","b"), target = c("T1","T2"), energy = c(-10, -20))
-select_score(df) # usa energy automaticamente
-#> Usando automaticamente a unica coluna numerica encontrada: energy
+select_score(df) # uses energy automatically
+#> Automatically using the only numeric column detected: energy
 #>   miRNA target energy Score
 #> 1     a     T1    -10   -10
 #> 2     b     T2    -20   -20

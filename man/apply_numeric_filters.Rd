@@ -2,24 +2,24 @@
 % Please edit documentation in R/functions.R
 \name{apply_numeric_filters}
 \alias{apply_numeric_filters}
-\title{Aplica filtros numericos ao Score}
+\title{Apply numeric filters to Score}
 \usage{
 apply_numeric_filters(df, min_value = NULL, max_value = NULL, remove_na = TRUE)
 }
 \arguments{
-\item{df}{Data.frame com coluna `Score`.}
+\item{df}{Data.frame containing a `Score` column.}
 
-\item{min_value}{Numeric or NULL. Mantem Score >= min_value se fornecido.}
+\item{min_value}{Numeric or NULL. Keeps Score >= min_value if provided.}
 
-\item{max_value}{Numeric or NULL. Mantem Score <= max_value se fornecido.}
+\item{max_value}{Numeric or NULL. Keeps Score <= max_value if provided.}
 
-\item{remove_na}{Logical. Se TRUE remove linhas com Score NA.}
+\item{remove_na}{Logical. If TRUE, removes rows with NA Score values.}
 }
 \value{
-Data.frame filtrado.
+A filtered data.frame.
 }
 \description{
-Filtra o data.frame para manter apenas linhas com Score dentro dos limites.
+Filters the data.frame to keep only rows with Score values within the specified limits.
 }
 \examples{
 df <- data.frame(miRNA = c("a","b","c"), Score = c(-10, NA, -30))

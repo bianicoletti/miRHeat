@@ -2,19 +2,19 @@
 % Please edit documentation in R/functions.R
 \name{prepare_for_heatmap}
 \alias{prepare_for_heatmap}
-\title{Prepara tabela padronizada para heatmap}
+\title{Prepare standardized table for heatmap}
 \usage{
 prepare_for_heatmap(df)
 }
 \arguments{
-\item{df}{Data.frame com pelo menos miRNA, target/gene e Score.}
+\item{df}{Data.frame with at least miRNA, target/gene, and Score.}
 }
 \value{
-Data.frame com colunas ordenadas: miRNA, target, gene, utr, Score e outras colunas opcionais.
+Data.frame with ordered columns: miRNA, target, gene, utr, Score, and optional extra columns.
 }
 \description{
-Recebe o data.frame com Score e cria/garante as colunas:
-miRNA, target, gene, utr, Score. Retorna um data.frame pronto para o heatmap.
+Receives a data.frame with Score and creates/ensures the columns:
+miRNA, target, gene, utr, Score. Returns a data.frame ready for heatmap generation.
 }
 \examples{
 df <- data.frame(miRNA = c("a","b"), target = c("G1_UTR_1","G2"), Score = c(-10, -20))

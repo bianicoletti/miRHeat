@@ -1,8 +1,8 @@
 ---
-title: "Introdução ao miRHeat: do arquivo ao heatmap"
+title: "Introduction to miRHeat: from input files to heatmap"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introdução ao miRHeat}
+  %\VignetteIndexEntry{Introduction to miRHeat}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,69 +13,62 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-## Introdução
+## Introduction
 
-O pacote **miRHeat** fornece um pipeline completo para:
+The **miRHeat** package provides a complete pipeline to:
 
--   Ler arquivos de saída do **IntaRNA**
--   Extrair e selecionar colunas numéricas como **Score**
--   Padronizar a estrutura para uso em visualizações
--   Gerar um **heatmap de interações miRNA × UTR** com agrupamento
-    automático
+-   Read output files from **IntaRNA** and **RNAHybrid** for exemple
+-   Extract and select numeric columns as **Score**
+-   Standardize the data structure for visualization purposes
+-   Generate a **miRNA × UTR interaction heatmap** with automatic clustering
 
-Ele foi projetado para facilitar a inspeção visual de interações
-preditas entre miRNAs e regiões **3'UTR** de genes.
+It was designed to facilitate the visual inspection of predicted interactions between miRNAs and gene 3'UTR regions.
 
-## Instalação
+## Installation
 
 ``` r
-# Caso o pacote esteja no GitHub:
 # install.packages("devtools")
-devtools::install_github("SEU_USUARIO/miRHeat")
+devtools::install_github("bianicoletti/miRHeat")
 ```
 
-Carregar o pacote:
+Load the package::
 
 ``` r
 library(miRHeat)
 ```
 
-## Arquivo de exemplo
+## Example file
 
-O pacote acompanha um arquivo de exemplo que pode ser usado para
-demonstração:
+The package includes an example file that can be used for demonstration purposes:
 
 ``` r
-arquivo <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
-arquivo
+file <- system.file("extdata", "example_blocks.txt", package = "miRHeat")
+file
 ```
 
-## 1. Lendo e estruturando os dados
+## 1. Reading and structuring the data
 
-A primeira etapa é usar `parse_file()`:
+The first step is to use `parse_file()`:
 
 ``` r
 df <- parse_file(arquivo)
 head(df)
 ```
 
-## 2. Escolhendo a métrica de Score
+## 2. Choosing the Score metric
 
-O IntaRNA pode produzir várias colunas numéricas (energia, ΔG, etc.).
+Predictive softwares can produce multiple numeric columns (energy, ΔG, etc.).
 
-O `select_score()` identifica automaticamente a única coluna numérica
----\
-ou permite que você especifique qual deseja usar:
+The `select_score()` function automatically identifies the only numeric column or allows you to specify which one should be used:
 
 ``` r
 df <- select_score(df, score_column = "interaction_energy")
 head(df$Score)
 ```
 
-## 3. Preparando os dados para o heatmap
+## 3. Preparing the data for the heatmap
 
-A função `prepare_for_heatmap()` garante que as colunas necessárias
-existam:
+The `prepare_for_heatmap()` function ensures that all required columns are present:
 
 -   `miRNA`
 -   `target`
@@ -88,53 +81,51 @@ df <- prepare_for_heatmap(df)
 head(df)
 ```
 
-## 4. Filtragem opcional
+## 4. Optional filtering
 
-Filtros numéricos podem ser aplicados de forma natural:
+Numeric filters can be applied naturally:
 
 ``` r
 df_filt <- apply_numeric_filters(df, Score < -10)
 ```
 
-## 5. Gerando o heatmap final
+## 5. Generating the final heatmap
 
-A função principal de visualização é:
+The main visualization function is:
 
 ``` r
 plot_mirheat(df)
 ```
 
-O gráfico:
+The plot:
 
--   monta automaticamente a matriz miRNA × UTR\
--   trata valores ausentes\
--   calcula distâncias e clusters\
--   determina número ideal de grupos\
--   usa `ComplexHeatmap` para renderizar
+-   automatically builds the miRNA × UTR matrix
+-   handles missing values
+-   computes distances and clusters
+-   determines the optimal number of groups
+-   uses`ComplexHeatmap` for rendering
 
-## 6. Exportando o heatmap para arquivo
+## 6. Exporting the heatmap to a file
 
 ``` r
 plot_mirheat(df, output_file = "heatmap_miRHeat.png")
 ```
 
-## Pipeline Completo
+## Complete Pipeline
 
 ``` r
-arquivo <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
+file <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
 
-df <- parse_file(arquivo)
+df <- parse_file(file)
 df <- select_score(df, "interaction_energy")
 df <- prepare_for_heatmap(df)
 
 plot_mirheat(df)
 ```
 
-## Conclusões
+## Conclusions
 
-O **miRHeat** fornece um fluxo de trabalho simples e automatizado para
-analisar interações miRNA--3'UTR preditas pelo IntaRNA --- desde a
-leitura dos blocos brutos até a visualização final em heatmap.
+**miRHeat** provides a simple and automated workflow to analyze miRNA–3'UTR interactions predicted by IntaRNA — from raw block parsing to the final heatmap visualization.
 
 ```{r setup}
 library(miRHeat)

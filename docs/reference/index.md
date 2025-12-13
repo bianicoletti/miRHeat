@@ -1,14 +1,14 @@
 # Package index
 
-## Funções principais
+## Main functions
 
-- [`parse_file()`](/reference/parse_file.md) : Parse de arquivo de
-  interacoes (TXT em blocos ou CSV/TSV)
-- [`select_score()`](/reference/select_score.md) : Seleciona qual coluna
-  numerica sera usada como Score
-- [`apply_numeric_filters()`](/reference/apply_numeric_filters.md) :
-  Aplica filtros numericos ao Score
-- [`prepare_for_heatmap()`](/reference/prepare_for_heatmap.md) : Prepara
-  tabela padronizada para heatmap
-- [`plot_mirheat()`](/reference/plot_mirheat.md) : Gera Heatmap de
-  Interacoes miRNA x UTR
+- [`parse_file()`](https://github.com/bianicoletti/miRHeat/reference/parse_file.md)
+  : Parse interaction files (block-formatted TXT or CSV/TSV)
+- [`select_score()`](https://github.com/bianicoletti/miRHeat/reference/select_score.md)
+  : Select which numeric column will be used as Score
+- [`apply_numeric_filters()`](https://github.com/bianicoletti/miRHeat/reference/apply_numeric_filters.md)
+  : Apply numeric filters to Score
+- [`prepare_for_heatmap()`](https://github.com/bianicoletti/miRHeat/reference/prepare_for_heatmap.md)
+  : Prepare standardized table for heatmap
+- [`plot_mirheat()`](https://github.com/bianicoletti/miRHeat/reference/plot_mirheat.md)
+  : Generate miRNA × UTR interaction heatmap

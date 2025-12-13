@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Introdução ao miRHeat: do arquivo ao heatmap • miRHeat</title>
+<title>Introduction to miRHeat: from input files to heatmap • miRHeat</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introdução ao miRHeat: do arquivo ao heatmap">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to miRHeat: from input files to heatmap">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,10 +33,10 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
-<li><a class="dropdown-item" href="../articles/intro.html">Introdução ao miRHeat</a></li>
+<li><a class="dropdown-item" href="../articles/intro.html">Introduction to miRHeat</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="../reference/index.html">Funções</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -56,7 +56,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Introdução ao miRHeat: do arquivo ao heatmap</h1>
+      <h1>Introduction to miRHeat: from input files to heatmap</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/bianicoletti/miRHeat/blob/HEAD/vignettes/intro.Rmd"><code>vignettes/intro.Rmd</code></a></small>
@@ -66,68 +66,66 @@
     
     
 <div class="section level2">
-<h2 id="introdução">Introdução<a class="anchor" aria-label="anchor" href="#introdu%C3%A7%C3%A3o"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>O pacote <strong>miRHeat</strong> fornece um pipeline completo
-para:</p>
+<p>The <strong>miRHeat</strong> package provides a complete pipeline
+to:</p>
 <ul>
-<li>Ler arquivos de saída do <strong>IntaRNA</strong>
+<li>Read output files from <strong>IntaRNA</strong> and
+<strong>RNAHybrid</strong> for exemple</li>
+<li>Extract and select numeric columns as <strong>Score</strong>
 </li>
-<li>Extrair e selecionar colunas numéricas como
-<strong>Score</strong>
-</li>
-<li>Padronizar a estrutura para uso em visualizações</li>
-<li>Gerar um <strong>heatmap de interações miRNA × UTR</strong> com
-agrupamento automático</li>
+<li>Standardize the data structure for visualization purposes</li>
+<li>Generate a <strong>miRNA × UTR interaction heatmap</strong> with
+automatic clustering</li>
 </ul>
-<p>Ele foi projetado para facilitar a inspeção visual de interações
-preditas entre miRNAs e regiões <strong>3’UTR</strong> de genes.</p>
+<p>It was designed to facilitate the visual inspection of predicted
+interactions between miRNAs and gene 3’UTR regions.</p>
 </div>
 <div class="section level2">
-<h2 id="instalação">Instalação<a class="anchor" aria-label="anchor" href="#instala%C3%A7%C3%A3o"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Caso o pacote esteja no GitHub:</span></span>
-<span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"SEU_USUARIO/miRHeat"</span><span class="op">)</span></span></code></pre></div>
-<p>Carregar o pacote:</p>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"bianicoletti/miRHeat"</span><span class="op">)</span></span></code></pre></div>
+<p>Load the package::</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bianicoletti/miRHeat">miRHeat</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bianicoletti/miRHeat">miRHeat</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="arquivo-de-exemplo">Arquivo de exemplo<a class="anchor" aria-label="anchor" href="#arquivo-de-exemplo"></a>
+<h2 id="example-file">Example file<a class="anchor" aria-label="anchor" href="#example-file"></a>
 </h2>
-<p>O pacote acompanha um arquivo de exemplo que pode ser usado para
-demonstração:</p>
+<p>The package includes an example file that can be used for
+demonstration purposes:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">arquivo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exemplo_blocos.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
-<span><span class="va">arquivo</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example_blocks.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
+<span><span class="va">file</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="lendo-e-estruturando-os-dados">1. Lendo e estruturando os dados<a class="anchor" aria-label="anchor" href="#lendo-e-estruturando-os-dados"></a>
+<h2 id="reading-and-structuring-the-data">1. Reading and structuring the data<a class="anchor" aria-label="anchor" href="#reading-and-structuring-the-data"></a>
 </h2>
-<p>A primeira etapa é usar <code><a href="../reference/parse_file.html">parse_file()</a></code>:</p>
+<p>The first step is to use <code><a href="../reference/parse_file.html">parse_file()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="va">arquivo</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="escolhendo-a-métrica-de-score">2. Escolhendo a métrica de Score<a class="anchor" aria-label="anchor" href="#escolhendo-a-m%C3%A9trica-de-score"></a>
+<h2 id="choosing-the-score-metric">2. Choosing the Score metric<a class="anchor" aria-label="anchor" href="#choosing-the-score-metric"></a>
 </h2>
-<p>O IntaRNA pode produzir várias colunas numéricas (energia, ΔG,
-etc.).</p>
-<p>O <code><a href="../reference/select_score.html">select_score()</a></code> identifica automaticamente a única
-coluna numérica —<br>
-ou permite que você especifique qual deseja usar:</p>
+<p>Predictive softwares can produce multiple numeric columns (energy,
+ΔG, etc.).</p>
+<p>The <code><a href="../reference/select_score.html">select_score()</a></code> function automatically identifies the
+only numeric column or allows you to specify which one should be
+used:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_score.html">select_score</a></span><span class="op">(</span><span class="va">df</span>, score_column <span class="op">=</span> <span class="st">"interaction_energy"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">Score</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">Score</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="preparando-os-dados-para-o-heatmap">3. Preparando os dados para o heatmap<a class="anchor" aria-label="anchor" href="#preparando-os-dados-para-o-heatmap"></a>
+<h2 id="preparing-the-data-for-the-heatmap">3. Preparing the data for the heatmap<a class="anchor" aria-label="anchor" href="#preparing-the-data-for-the-heatmap"></a>
 </h2>
-<p>A função <code><a href="../reference/prepare_for_heatmap.html">prepare_for_heatmap()</a></code> garante que as colunas
-necessárias existam:</p>
+<p>The <code><a href="../reference/prepare_for_heatmap.html">prepare_for_heatmap()</a></code> function ensures that all
+required columns are present:</p>
 <ul>
 <li><code>miRNA</code></li>
 <li><code>target</code></li>
@@ -137,61 +135,56 @@ necessárias existam:</p>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_for_heatmap.html">prepare_for_heatmap</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="filtragem-opcional">4. Filtragem opcional<a class="anchor" aria-label="anchor" href="#filtragem-opcional"></a>
+<h2 id="optional-filtering">4. Optional filtering<a class="anchor" aria-label="anchor" href="#optional-filtering"></a>
 </h2>
-<p>Filtros numéricos podem ser aplicados de forma natural:</p>
+<p>Numeric filters can be applied naturally:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/apply_numeric_filters.html">apply_numeric_filters</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">Score</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="gerando-o-heatmap-final">5. Gerando o heatmap final<a class="anchor" aria-label="anchor" href="#gerando-o-heatmap-final"></a>
+<h2 id="generating-the-final-heatmap">5. Generating the final heatmap<a class="anchor" aria-label="anchor" href="#generating-the-final-heatmap"></a>
 </h2>
-<p>A função principal de visualização é:</p>
+<p>The main visualization function is:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
-<p>O gráfico:</p>
+<p>The plot:</p>
 <ul>
-<li>monta automaticamente a matriz miRNA × UTR<br>
-</li>
-<li>trata valores ausentes<br>
-</li>
-<li>calcula distâncias e clusters<br>
-</li>
-<li>determina número ideal de grupos<br>
-</li>
-<li>usa <code>ComplexHeatmap</code> para renderizar</li>
+<li>automatically builds the miRNA × UTR matrix</li>
+<li>handles missing values</li>
+<li>computes distances and clusters</li>
+<li>determines the optimal number of groups</li>
+<li>uses<code>ComplexHeatmap</code> for rendering</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="exportando-o-heatmap-para-arquivo">6. Exportando o heatmap para arquivo<a class="anchor" aria-label="anchor" href="#exportando-o-heatmap-para-arquivo"></a>
+<h2 id="exporting-the-heatmap-to-a-file">6. Exporting the heatmap to a file<a class="anchor" aria-label="anchor" href="#exporting-the-heatmap-to-a-file"></a>
 </h2>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span>, output_file <span class="op">=</span> <span class="st">"heatmap_miRHeat.png"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="pipeline-completo">Pipeline Completo<a class="anchor" aria-label="anchor" href="#pipeline-completo"></a>
+<h2 id="pcomplete-pipeline">PComplete Pipeline<a class="anchor" aria-label="anchor" href="#pcomplete-pipeline"></a>
 </h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">arquivo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exemplo_blocos.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exemplo_blocos.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="va">arquivo</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_score.html">select_score</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"interaction_energy"</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_for_heatmap.html">prepare_for_heatmap</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="conclusões">Conclusões<a class="anchor" aria-label="anchor" href="#conclus%C3%B5es"></a>
+<h2 id="conclusions">Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"></a>
 </h2>
-<p>O <strong>miRHeat</strong> fornece um fluxo de trabalho simples e
-automatizado para analisar interações miRNA–3’UTR preditas pelo IntaRNA
-— desde a leitura dos blocos brutos até a visualização final em
-heatmap.</p>
+<p>*miRHeat** provides a simple and automated workflow to analyze
+miRNA–3’UTR interactions predicted by IntaRNA — from raw block parsing
+to the final heatmap visualization.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bianicoletti/miRHeat">miRHeat</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bianicoletti/miRHeat">miRHeat</a></span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -204,7 +197,7 @@ heatmap.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

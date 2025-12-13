@@ -1,7 +1,8 @@
-# Prepara tabela padronizada para heatmap
+# Prepare standardized table for heatmap
 
-Recebe o data.frame com Score e cria/garante as colunas: miRNA, target,
-gene, utr, Score. Retorna um data.frame pronto para o heatmap.
+Receives a data.frame with Score and creates/ensures the columns: miRNA,
+target, gene, utr, Score. Returns a data.frame ready for heatmap
+generation.
 
 ## Usage
 
@@ -13,12 +14,12 @@ prepare_for_heatmap(df)
 
 - df:
 
-  Data.frame com pelo menos miRNA, target/gene e Score.
+  Data.frame with at least miRNA, target/gene, and Score.
 
 ## Value
 
-Data.frame com colunas ordenadas: miRNA, target, gene, utr, Score e
-outras colunas opcionais.
+Data.frame with ordered columns: miRNA, target, gene, utr, Score, and
+optional extra columns.
 
 ## Examples
 

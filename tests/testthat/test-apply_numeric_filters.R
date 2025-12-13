@@ -1,13 +1,13 @@
-test_that("apply_numeric_filters lança erro se df nao e data.frame", {
+test_that("apply_numeric_filters throws an error if df is not a data.frame", {
   expect_error(apply_numeric_filters(NULL), "data.frame")
 })
 
-test_that("apply_numeric_filters lança erro se falta a coluna Score", {
+test_that("apply_numeric_filters throws an error if the Score column is missing", {
   df <- data.frame(a = 1:3)
   expect_error(apply_numeric_filters(df), "Score")
 })
 
-test_that("apply_numeric_filters remove NA por padrao", {
+test_that("apply_numeric_filters removes NA values by default", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, NA, -30)
@@ -19,7 +19,7 @@ test_that("apply_numeric_filters remove NA por padrao", {
   expect_false(any(is.na(out$Score)))
 })
 
-test_that("apply_numeric_filters mantem NA quando remove_na = FALSE", {
+test_that("apply_numeric_filters keeps NA values when remove_na = FALSE", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, NA, -30)
@@ -31,7 +31,7 @@ test_that("apply_numeric_filters mantem NA quando remove_na = FALSE", {
   expect_true(any(is.na(out$Score)))
 })
 
-test_that("apply_numeric_filters aplica min_value corretamente", {
+test_that("apply_numeric_filters correctly applies min_value", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, -20, -30)
@@ -43,7 +43,7 @@ test_that("apply_numeric_filters aplica min_value corretamente", {
   expect_equal(out$Score, c(-10, -20))
 })
 
-test_that("apply_numeric_filters aplica max_value corretamente", {
+test_that("apply_numeric_filters correctly applies max_value", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     Score = c(-10, -20, -30)
@@ -55,7 +55,7 @@ test_that("apply_numeric_filters aplica max_value corretamente", {
   expect_equal(out$Score, c(-20, -30))
 })
 
-test_that("apply_numeric_filters aplica min_value e max_value juntos", {
+test_that("apply_numeric_filters orrectly applies min_value and max_value together", {
   df <- data.frame(
     miRNA = c("a", "b", "c", "d"),
     Score = c(-5, -15, -25, -35)
@@ -67,7 +67,7 @@ test_that("apply_numeric_filters aplica min_value e max_value juntos", {
   expect_equal(out$Score, c(-15, -25))
 })
 
-test_that("apply_numeric_filters mantem as demais colunas intactas", {
+test_that("apply_numeric_filters keeps other columns unchanged", {
   df <- data.frame(
     miRNA = c("a", "b", "c"),
     target = c("T1", "T2", "T3"),
