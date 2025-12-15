@@ -20,6 +20,10 @@ navbar:
     - text: "Functions"
       href: reference/index.html
 
+home:
+  title: mirHeat
+  logo: man/figures/logo_miRHeat.png
+
 # Function reference
 reference:
   - title: "Main functions"

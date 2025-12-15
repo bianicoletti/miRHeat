@@ -50,6 +50,22 @@ install.packages(c(
 ))
 ```
 
+## Installation
+
+# Install Bioconductor (if not already installed)
+
+if (!requireNamespace(“BiocManager”, quietly = TRUE))
+install.packages(“BiocManager”)
+
+# Install ComplexHeatmap
+
+BiocManager::install(“ComplexHeatmap”)
+
+# Install miRHeat from GitHub
+
+install.packages(“remotes”)
+remotes::install_github(“bianicoletti/miRHeat”)
+
 ## 🛠️ **How to Use the Pipeline**
 
 ### 1. Load the main script

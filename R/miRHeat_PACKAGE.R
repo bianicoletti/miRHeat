@@ -1,9 +1,9 @@
-#' miRHeat: Ferramentas para análise de interações miRNA–UTR
+#' miRHeat: Tools for analyzing miRNA–UTR interactions
 #'
-#' O pacote miRHeat fornece funções para ler arquivos de predição de interação
-#' entre genes e miRNAs,
-#' selecionar métricas de score, preparar dados e gerar heatmaps
-#' de interações miRNA × UTR.
+#' The miRHeat package provides functions for reading interaction prediction files
+#' between genes and miRNAs,
+#' selecting score metrics, preparing data, and generating heatmaps
+#' of miRNA × UTR interactions.
 #'
 #' @keywords internal
 "_PACKAGE"
