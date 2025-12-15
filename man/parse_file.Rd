@@ -6,7 +6,7 @@
 \usage{
 parse_file(
   file,
-  pattern = "^.*_UTR_.*",
+  pattern = "(?i)utr",
   guess_tabular = TRUE,
   mirna_col = NULL,
   target_col = NULL
