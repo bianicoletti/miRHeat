@@ -1,4 +1,4 @@
-# Generate miRNA × UTR interaction heatmap
+# Generate miRNA vs UTR interaction heatmap
 
 Generates a heatmap of interaction scores between miRNAs and UTRs.
 Automatically determines the optimal number of clusters using dynamic

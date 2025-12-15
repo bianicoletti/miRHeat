@@ -57,8 +57,10 @@
 </h1></div>
 </div>
 <div class="section level1">
-<h1 id="page_facing_up-readme--pipeline-de-interação-mirnautr-">📄 <strong>README — Pipeline de Interação miRNA–UTR</strong> <img src="reference/figures/logo_miRHeat.png" align="right" width="160"><a class="anchor" aria-label="anchor" href="#page_facing_up-readme--pipeline-de-intera%C3%A7%C3%A3o-mirnautr-"></a>
+<h1 id="page_facing_up-mirheat--mirnautr-interaction-pipeline">📄 <strong>miRHeat — miRNA–UTR Interaction Pipeline</strong>
+<a class="anchor" aria-label="anchor" href="#page_facing_up-mirheat--mirnautr-interaction-pipeline"></a>
 </h1>
+<p><img src="reference/figures/logo_miRHeat.png" align="right" width="120"></p>
 <div class="section level2">
 <h2 id="dna-overview">🧬 <strong>Overview</strong>
 <a class="anchor" aria-label="anchor" href="#dna-overview"></a>
@@ -105,7 +107,8 @@
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="hammer_and_wrench-how-to-use-the-pipeline">🛠️ *How to Use the Pipeline**<a class="anchor" aria-label="anchor" href="#hammer_and_wrench-how-to-use-the-pipeline"></a>
+<h2 id="hammer_and_wrench-how-to-use-the-pipeline">🛠️ <strong>How to Use the Pipeline</strong>
+<a class="anchor" aria-label="anchor" href="#hammer_and_wrench-how-to-use-the-pipeline"></a>
 </h2>
 <div class="section level3">
 <h3 id="id_1-load-the-main-script">1. Load the main script<a class="anchor" aria-label="anchor" href="#id_1-load-the-main-script"></a>
@@ -125,6 +128,34 @@
 <span><span class="fu"><a href="reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <p>The heatmap will be displayed automatically, with the number of clusters dynamically detected.</p>
 </div>
+<div class="section level3">
+<h3 id="generating-the-interaction-table-mirheat_table">Generating the Interaction Table (<code>mirHeat_table</code>)<a class="anchor" aria-label="anchor" href="#generating-the-interaction-table-mirheat_table"></a>
+</h3>
+<p>In addition to heatmap visualization, the pipeline provides a dedicated function to generate a clean, standardized interaction table that can be easily inspected, filtered, or exported for downstream analyses.</p>
+<p>The <code>mirHeat_table</code> function modularizes the workflow by isolating the table-generation step, allowing users to stop the pipeline before visualization if desired.</p>
+<p><strong>Why use <code>mirHeat_table</code>?</strong></p>
+<ul>
+<li>Produce a reproducible, analysis-ready table</li>
+<li>Inspect interactions before plotting</li>
+<li>Export results to CSV for sharing or further analysis</li>
+<li>Integrate with external statistical or visualization tools</li>
+</ul>
+<p><strong>Typical usage</strong></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="st">"exemplo_blocos.txt"</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/select_score.html">select_score</a></span><span class="op">(</span><span class="va">df</span>, score_column <span class="op">=</span> <span class="st">"interaction_energy"</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/apply_numeric_filters.html">apply_numeric_filters</a></span><span class="op">(</span><span class="va">df</span>, min_value <span class="op">=</span> <span class="op">-</span><span class="fl">8</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">interaction_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mirHeat_table.html">mirHeat_table</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Exporting the table</strong></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">interaction_table</span>,</span>
+<span>          file <span class="op">=</span> <span class="st">"outputs/mirna_utr_interactions.csv"</span>,</span>
+<span>          row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>This table can then be used independently or passed directly to the heatmap function:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">interaction_table</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="bar_chart-output-example">📊 <strong>Output Example</strong>
@@ -137,17 +168,17 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="file_folder-recommended-repository-structure">📁 <strong>Recommended Repository Structure</strong>
-<a class="anchor" aria-label="anchor" href="#file_folder-recommended-repository-structure"></a>
+<h2 id="repeat-complete-modular-workflow">🔁 <strong>Complete Modular Workflow</strong>
+<a class="anchor" aria-label="anchor" href="#repeat-complete-modular-workflow"></a>
 </h2>
-<pre><code>/mirna-utr-pipeline
- ├─ pipeline_mirna_utr.R
- ├─ exemplo_blocos.txt
- ├─ outputs/
- │    ├─ heatmap.png (opcional)
- │    └─ matriz_mirna_utr.csv
- ├─ README.md
- └─ LICENSE (opcional)</code></pre>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="st">"exemplo_blocos.txt"</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/select_score.html">select_score</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"interaction_energy"</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/apply_numeric_filters.html">apply_numeric_filters</a></span><span class="op">(</span><span class="va">df</span>, min_value <span class="op">=</span> <span class="op">-</span><span class="fl">8</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">interaction_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mirHeat_table.html">mirHeat_table</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">interaction_table</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="mag-important-notes">🔍 <strong>Important Notes</strong>

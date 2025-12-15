@@ -54,6 +54,7 @@ test_that("mirHeat_table() extracts gene and utr from target when missing", {
   expect_equal(out$gene, "MICA")
   expect_equal(out$utr, "2")
 })
+
 test_that("mirHeat_table() returns standardized columns in correct order", {
   df <- data.frame(
     miRNA = "miR-21",
@@ -81,4 +82,3 @@ test_that("mirHeat_table() returns a tibble", {
 
   expect_s3_class(out, "tbl_df")
 })
-

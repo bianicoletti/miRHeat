@@ -29,6 +29,7 @@ reference:
       - apply_numeric_filters
       - prepare_for_heatmap
       - plot_mirheat
+      - mirHeat_table
 
 # Articles (vignettes)
 articles:

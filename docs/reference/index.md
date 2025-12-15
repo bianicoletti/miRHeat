@@ -11,4 +11,6 @@
 - [`prepare_for_heatmap()`](https://github.com/bianicoletti/miRHeat/reference/prepare_for_heatmap.md)
   : Prepare standardized table for heatmap
 - [`plot_mirheat()`](https://github.com/bianicoletti/miRHeat/reference/plot_mirheat.md)
-  : Generate miRNA × UTR interaction heatmap
+  : Generate miRNA vs UTR interaction heatmap
+- [`mirHeat_table()`](https://github.com/bianicoletti/miRHeat/reference/mirHeat_table.md)
+  : Generate a standardized interaction table for mirHeat

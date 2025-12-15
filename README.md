@@ -1,7 +1,9 @@
 README
 ================
 
-# 📄 **README — miRNA–UTR Interaction Pipeline**
+# 📄 **miRHeat — miRNA–UTR Interaction Pipeline**
+
+<img src="man/figures/logo_miRHeat.png" align="right" width="120" />
 
 ## 🧬 **Overview**
 
@@ -70,22 +72,65 @@ plot_mirheat(df)
 The heatmap will be displayed automatically, with the number of clusters
 dynamically detected.
 
+### Generating the Interaction Table (`mirHeat_table`)
+
+In addition to heatmap visualization, the pipeline provides a dedicated
+function to generate a clean, standardized interaction table that can be
+easily inspected, filtered, or exported for downstream analyses.
+
+The `mirHeat_table` function modularizes the workflow by isolating the
+table-generation step, allowing users to stop the pipeline before
+visualization if desired.
+
+**Why use `mirHeat_table`?**
+
+- Produce a reproducible, analysis-ready table
+- Inspect interactions before plotting
+- Export results to CSV for sharing or further analysis
+- Integrate with external statistical or visualization tools
+
+**Typical usage**
+
+``` r
+df <- parse_file("exemplo_blocos.txt")
+df <- select_score(df, score_column = "interaction_energy")
+df <- apply_numeric_filters(df, min_value = -8)
+
+interaction_table <- mirHeat_table(df)
+```
+
+**Exporting the table**
+
+``` r
+write.csv(interaction_table,
+          file = "outputs/mirna_utr_interactions.csv",
+          row.names = FALSE)
+```
+
+This table can then be used independently or passed directly to the
+heatmap function:
+
+``` r
+plot_mirheat(interaction_table)
+```
+
 ## 📊 **Output Example**
 
 - Normalized miRNA × UTR matrix
 - Colored heatmap with dendrograms
 - Automatic cluster assignment
 
-## 📁 **Recommended Repository Structure**
+## 🔁 **Complete Modular Workflow**
 
-    /mirna-utr-pipeline
-     ├─ pipeline_mirna_utr.R
-     ├─ exemplo_blocos.txt
-     ├─ outputs/
-     │    ├─ heatmap.png (opcional)
-     │    └─ matriz_mirna_utr.csv
-     ├─ README.md
-     └─ LICENSE (opcional)
+``` r
+df <- parse_file("exemplo_blocos.txt")
+df <- select_score(df, "interaction_energy")
+df <- apply_numeric_filters(df, min_value = -8)
+
+interaction_table <- mirHeat_table(df)
+
+plot_mirheat(interaction_table)
+```
 
 ## 🔍 **Important Notes**
 

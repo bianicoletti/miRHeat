@@ -251,15 +251,13 @@ select_score <- function(df, score_column = NULL) {
     stop("df must be a data.frame returned by parse_file().")
   }
 
-  # If the user explicitly provides the column
+  # ---- If the user explicitly provides the column ----
   if (!is.null(score_column)) {
 
-    # 1. Check whether it exists
     if (!score_column %in% names(df)) {
       stop("Specified column not found: '", score_column, "'.")
     }
 
-    # 2. Check whether it is numeric
     if (!is.numeric(df[[score_column]])) {
       stop("The specified column is not numeric: '", score_column, "'.")
     }
@@ -268,26 +266,21 @@ select_score <- function(df, score_column = NULL) {
     return(df)
   }
 
-  # ---- If score_column is NULL — automatic detection ----
+  # ---- Automatic detection ----
 
-  # identify numeric columns
   numeric_cols <- names(df)[sapply(df, is.numeric)]
   numeric_cols <- setdiff(numeric_cols, c("utr", "target", "miRNA", "gene"))
 
-  # no numeric columns
   if (length(numeric_cols) == 0) {
     stop("No numeric column found to be used as Score.")
   }
 
-  # single numeric column, use it
   if (length(numeric_cols) == 1) {
     score_column <- numeric_cols[1]
-    message("Automatically using the only numeric column detected: ", score_column)
     df$Score <- df[[score_column]]
     return(df)
   }
 
-  # multiple numeric columns
   stop(
     paste0(
       "Multiple numeric columns detected: ",
@@ -296,6 +289,9 @@ select_score <- function(df, score_column = NULL) {
     )
   )
 }
+
+
+
 
 #' Apply numeric filters to Score
 #'
@@ -370,7 +366,7 @@ prepare_for_heatmap <- function(df) {
 }
 
 
-#' Generate miRNA × UTR interaction heatmap
+#' Generate miRNA vs UTR interaction heatmap
 #'
 #' @description
 #' Generates a heatmap of interaction scores between miRNAs and UTRs.
@@ -406,7 +402,7 @@ plot_mirheat <- function(df,
     df <- prepare_for_heatmap(df)
   }
 
-  message("Building miRNA × UTR matrix...")
+  message("Building miRNA vs UTR matrix...")
 
   # Reformat  using explicit namespace
   matriz <- reshape2::dcast(df, miRNA ~ utr, value.var = "Score")

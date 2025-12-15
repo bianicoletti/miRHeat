@@ -145,10 +145,31 @@ required columns are present:</p>
 <code class="sourceCode R"><span><span class="va">df_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/apply_numeric_filters.html">apply_numeric_filters</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">Score</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="generating-the-final-heatmap">5. Generating the final heatmap<a class="anchor" aria-label="anchor" href="#generating-the-final-heatmap"></a>
+<h2 id="generating-a-standardized-interaction-table">5. Generating a standardized interaction table<a class="anchor" aria-label="anchor" href="#generating-a-standardized-interaction-table"></a>
+</h2>
+<p>In many analyses, users may want to export the processed interaction
+data for downstream analyses, reporting, or manual inspection, without
+necessarily generating a heatmap.</p>
+<p>The function<code>mirHeat_table</code>isolates the table-building
+step of the pipeline and returns a clean, standardized tibble that can
+be easily saved or reused. This is how you can use it:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">table_df</span> <span class="op">&lt;-</span> <span class="fu">mirheat_table</span><span class="op">(</span></span>
+<span>  file <span class="op">=</span> <span class="va">file</span>,</span>
+<span>  score_column <span class="op">=</span> <span class="st">"interaction_energy"</span>,</span>
+<span>  min_value <span class="op">=</span> <span class="op">-</span><span class="fl">10</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">table_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Optional: save table</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">table_df</span>, <span class="st">"miRHeat_interactions.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="generating-the-final-heatmap">6. Generating the final heatmap<a class="anchor" aria-label="anchor" href="#generating-the-final-heatmap"></a>
 </h2>
 <p>The main visualization function is:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <p>The plot:</p>
 <ul>
@@ -160,30 +181,37 @@ required columns are present:</p>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="exporting-the-heatmap-to-a-file">6. Exporting the heatmap to a file<a class="anchor" aria-label="anchor" href="#exporting-the-heatmap-to-a-file"></a>
+<h2 id="exporting-the-heatmap-to-a-file">7. Exporting the heatmap to a file<a class="anchor" aria-label="anchor" href="#exporting-the-heatmap-to-a-file"></a>
 </h2>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span>, output_file <span class="op">=</span> <span class="st">"heatmap_miRHeat.png"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="pcomplete-pipeline">PComplete Pipeline<a class="anchor" aria-label="anchor" href="#pcomplete-pipeline"></a>
+<h2 id="complete-pipeline">Complete Pipeline<a class="anchor" aria-label="anchor" href="#complete-pipeline"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exemplo_blocos.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example_blocks.txt"</span>, package <span class="op">=</span> <span class="st">"miRHeat"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_file.html">parse_file</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_score.html">select_score</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"interaction_energy"</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_for_heatmap.html">prepare_for_heatmap</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co"># Generate standardized interaction table</span></span>
+<span><span class="va">table_df</span> <span class="op">&lt;-</span> <span class="fu">mirheat_table</span><span class="op">(</span></span>
+<span>  file <span class="op">=</span> <span class="va">file</span>,</span>
+<span>  score_column <span class="op">=</span> <span class="st">"interaction_energy"</span>,</span>
+<span>  min_value <span class="op">=</span> <span class="op">-</span><span class="fl">10</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Optional: save table</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">table_df</span>, <span class="st">"miRHeat_interactions.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generate heatmap</span></span>
+<span><span class="fu"><a href="../reference/plot_mirheat.html">plot_mirheat</a></span><span class="op">(</span><span class="va">table_df</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="conclusions">Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"></a>
 </h2>
-<p>*miRHeat** provides a simple and automated workflow to analyze
-miRNA–3’UTR interactions predicted by IntaRNA — from raw block parsing
-to the final heatmap visualization.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><strong>miRHeat</strong> provides a simple and automated workflow to
+analyze miRNA–3’UTR interactions predicted by IntaRNA — from raw block
+parsing to the final heatmap visualization.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bianicoletti/miRHeat">miRHeat</a></span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

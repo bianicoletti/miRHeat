@@ -5,10 +5,9 @@ test_that("select_score automatically uses the single numeric column", {
     energy = c(-10, -20)
   )
 
-  expect_message(
-    out <- select_score(df),
-    "automatically"
-  )
+  out <- select_score(df)
+  expect_true("Score" %in% colnames(out))
+
 
   expect_equal(out$Score, df$energy)
 })
@@ -23,8 +22,9 @@ test_that("select_score requires score_column when multiple numeric columns exis
 
   expect_error(
     select_score(df),
-    "multiple numeric columns"
+    "numeric columns"
   )
+
 })
 
 test_that("select_score works when score_column is provided", {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{plot_mirheat}
 \alias{plot_mirheat}
-\title{Generate miRNA × UTR interaction heatmap}
+\title{Generate miRNA vs UTR interaction heatmap}
 \usage{
 plot_mirheat(df, output_file = NULL, width = 2000, height = 1800)
 }

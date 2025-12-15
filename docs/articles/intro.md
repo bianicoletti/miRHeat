@@ -86,7 +86,30 @@ Numeric filters can be applied naturally:
 df_filt <- apply_numeric_filters(df, Score < -10)
 ```
 
-## 5. Generating the final heatmap
+## 5. Generating a standardized interaction table
+
+In many analyses, users may want to export the processed interaction
+data for downstream analyses, reporting, or manual inspection, without
+necessarily generating a heatmap.
+
+The function`mirHeat_table`isolates the table-building step of the
+pipeline and returns a clean, standardized tibble that can be easily
+saved or reused. This is how you can use it:
+
+``` r
+table_df <- mirheat_table(
+  file = file,
+  score_column = "interaction_energy",
+  min_value = -10
+)
+
+head(table_df)
+
+# Optional: save table
+write.csv(table_df, "miRHeat_interactions.csv", row.names = FALSE)
+```
+
+## 6. Generating the final heatmap
 
 The main visualization function is:
 
@@ -102,27 +125,34 @@ The plot:
 - determines the optimal number of groups
 - uses`ComplexHeatmap` for rendering
 
-## 6. Exporting the heatmap to a file
+## 7. Exporting the heatmap to a file
 
 ``` r
 plot_mirheat(df, output_file = "heatmap_miRHeat.png")
 ```
 
-## PComplete Pipeline
+## Complete Pipeline
 
 ``` r
-file <- system.file("extdata", "exemplo_blocos.txt", package = "miRHeat")
+file <- system.file("extdata", "example_blocks.txt", package = "miRHeat")
 
-df <- parse_file(file)
-df <- select_score(df, "interaction_energy")
-df <- prepare_for_heatmap(df)
+# Generate standardized interaction table
+table_df <- mirheat_table(
+  file = file,
+  score_column = "interaction_energy",
+  min_value = -10
+)
 
-plot_mirheat(df)
+# Optional: save table
+write.csv(table_df, "miRHeat_interactions.csv", row.names = FALSE)
+
+# Generate heatmap
+plot_mirheat(table_df)
 ```
 
 ## Conclusions
 
-\*miRHeat\*\* provides a simple and automated workflow to analyze
+**miRHeat** provides a simple and automated workflow to analyze
 miRNA–3’UTR interactions predicted by IntaRNA — from raw block parsing
 to the final heatmap visualization.
 
