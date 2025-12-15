@@ -29,7 +29,7 @@
 #' }
 #' @export
 parse_file <- function(file,
-                       pattern = "^.*_UTR_.*",
+                       pattern = "(?i)utr",
                        guess_tabular = TRUE,
                        mirna_col = NULL,
                        target_col = NULL) {
@@ -117,7 +117,7 @@ parse_file <- function(file,
   linhas <- readLines(file, warn = FALSE)
   indices_inicio <- grep(pattern, linhas)
   if (length(indices_inicio) == 0) {
-    stop("Nenhum bloco encontrado com o padrao: ", pattern)
+    stop("No blocks were found matching the pattern: ", pattern)
   }
   indices_fim <- c((indices_inicio[-1] - 1), length(linhas))
   blocos <- Map(function(i, f) linhas[i:f], indices_inicio, indices_fim)
