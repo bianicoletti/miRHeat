@@ -36,6 +36,9 @@ parse_file <- function(file,
   if (!file.exists(file)) stop("Input file not found. Please check the file path.", file)
 
   ext <- tolower(tools::file_ext(file))
+  linhas_probe <- readLines(file, warn = FALSE)
+  # detectar blocos apenas se a linha for um identificador de bloco
+  has_blocks <- any(grepl("^[A-Za-z0-9]+[_-]?UTR[_-]?[0-9]+$", linhas_probe, ignore.case = TRUE))
 
   # Helper: normalize the columns names
   clean_name <- function(x) {
@@ -45,18 +48,24 @@ parse_file <- function(file,
   }
 
   # ----- (csv/tsv/txt) -----
-  if (guess_tabular && ext %in% c("csv", "tsv", "txt")) {
+  if (guess_tabular && ext %in% c("csv", "tsv", "txt") && !has_blocks) {
+
     # attempt to infer the delimiter from the first line
 
+    # tentativa robusta de detectar separador
     first_line <- readLines(file, n = 1, warn = FALSE)
+
+    sep <- NULL
+    if (grepl(",", first_line)) sep <- ","
+    if (grepl(";", first_line)) sep <- ";"
+    if (grepl("\t", first_line)) sep <- "\t"
+
     df_tab <- NULL
-    if (grepl(",", first_line) && ext %in% c("csv", "txt")) {
-      df_tab <- tryCatch(utils::read.csv(file, stringsAsFactors = FALSE), error = function(e) NULL)
-    } else if (grepl("\t", first_line) && ext %in% c("tsv", "txt")) {
-      df_tab <- tryCatch(utils::read.delim(file, stringsAsFactors = FALSE), error = function(e) NULL)
-    } else if (grepl(";", first_line) && ext %in% c("csv","txt")) {
-      # possible semicolon-separated CSV file
-      df_tab <- tryCatch(utils::read.csv2(file, stringsAsFactors = FALSE), error = function(e) NULL)
+    if (!is.null(sep)) {
+      df_tab <- tryCatch(
+        utils::read.table(file, sep = sep, header = TRUE, stringsAsFactors = FALSE, quote = "", comment.char = ""),
+        error = function(e) NULL
+      )
     }
 
     if (!is.null(df_tab) && is.data.frame(df_tab) && ncol(df_tab) > 0) {
@@ -91,13 +100,26 @@ parse_file <- function(file,
       }
 
       # detect numeric columns that resemble scores (excluding key columns)
-      score_col <- setdiff(nms[vapply(df_tab, is.numeric, logical(1))], c(mirna_col, target_col))
+      score_col <- setdiff(
+        nms[vapply(df_tab, is.numeric, logical(1))],
+        c(mirna_col, target_col)
+      )
+
+
 
       df_out <- data.frame(
         miRNA = df_tab[[mirna_col]],
         target = df_tab[[target_col]],
         stringsAsFactors = FALSE
       )
+      # reconstruir target no padrão GENE_UTR_ID quando possível
+      if ("gene" %in% names(df_tab) && "utr" %in% names(df_tab)) {
+        df_out$target <- paste0(
+          toupper(df_tab[["gene"]]),
+          "_UTR_",
+          df_tab[["utr"]]
+        )
+      }
 
       # append detected numeric columns (scores)
       for (sc in score_col) {
@@ -124,25 +146,29 @@ parse_file <- function(file,
 
   # helper functions for extraction
   extrai_miRNA <- function(bloco) {
-    # procura padroes como hsa-miR-..., miR-..., miRNA-..., miR...
-    pat <- "(?:hsa-)?(?:miR|miRNA)[-A-Za-z0-9_]+"
-    hit <- unique(unlist(regmatches(bloco, gregexpr(pat, bloco, ignore.case = TRUE))))
-    if (length(hit) >= 1 && nzchar(hit[1])) {
-      return(hit[1])
+
+    # Prefer full miRNA names with arm annotation (5p / 3p)
+    pat_full <- "(hsa-)?miR-[0-9A-Za-z]+-(?:3p|5p)"
+    hits_full <- unique(unlist(regmatches(bloco, gregexpr(pat_full, bloco, ignore.case = TRUE))))
+    if (length(hits_full) >= 1) {
+      return(hits_full[1])
     }
-    # fallback: search for a line containing 'miR' or 'mirna', ignoring case
-    idx <- grep("mirna|mir", bloco, ignore.case = TRUE)
-    if (length(idx) >= 1) {
-      cand <- trimws(bloco[idx[1]])
-      return(cand)
+
+    # Fallback: generic miRNA pattern
+    pat_generic <- "(hsa-)?miR-[0-9A-Za-z]+"
+    hits_generic <- unique(unlist(regmatches(bloco, gregexpr(pat_generic, bloco, ignore.case = TRUE))))
+    if (length(hits_generic) >= 1) {
+      return(hits_generic[1])
     }
+
     return(NA_character_)
   }
+
 
   extrai_target <- function(first_line) {
     txt <- trimws(first_line)
     # attempt to extract gene and UTR: GENE_UTR_123 or variants
-    m <- regexec("^([A-Za-z0-9]+)[_\\.-]*UTR[_\\.-]*([0-9]+)?", txt, ignore.case = TRUE)
+    m <- regexec("^([A-Za-z0-9]+)[-_ ]*UTR[_ -]*([0-9]+)$", txt, ignore.case = TRUE)
     mm <- regmatches(txt, m)[[1]]
     if (length(mm) >= 2) {
       gene <- mm[2]
@@ -155,24 +181,28 @@ parse_file <- function(file,
   }
 
   extrai_pairs_numeric <- function(bloco) {
-    # capture "name = value" pairs where the value is numeric (optional sign and decimal allowed),
-    # accept percentages in the name and ignore units
-    pat <- "([A-Za-z0-9\\+\\-\\_\\s\\.\\%]+?)\\s*=\\s*(-?[0-9]+\\.?[0-9]*(?:[eE][-+]?[0-9]+)?)"
+
+    # Agora permite nomes com espaço, hífen, ponto etc.
+    pat <- "([A-Za-z0-9_. -]+)\\s*[:=]\\s*(-?[0-9]+\\.?[0-9]*(?:[eE][-+]?[0-9]+)?)"
+
     hits <- regmatches(bloco, gregexpr(pat, bloco, perl = TRUE, ignore.case = TRUE))
     pairs <- unlist(hits)
     if (length(pairs) == 0) return(list())
+
     res <- list()
     for (p in pairs) {
       m <- regexec(pat, p, perl = TRUE, ignore.case = TRUE)
       mm <- regmatches(p, m)[[1]]
+
       if (length(mm) >= 3) {
         name_raw <- trimws(mm[2])
-        name_col <- gsub("[^A-Za-z0-9_]", "_", tolower(name_raw))
+
+        # Normalização robusta: transforma "interaction energy" → "interaction_energy"
+        name_col <- tolower(name_raw)
+        name_col <- gsub("[^a-z0-9]+", "_", name_col)
         name_col <- gsub("_+", "_", name_col)
-        # remove trailing/leading underscores
-        name_col <- gsub("^_|_$", "", name_col)
+
         val <- as.numeric(mm[3])
-        # if it already exists, coerce to a vector (keeping the last value if necessary)
         res[[name_col]] <- val
       }
     }
@@ -193,14 +223,21 @@ parse_file <- function(file,
   # collect all possible column names
   all_names <- unique(unlist(lapply(rows, names)))
   df_list <- lapply(rows, function(x) {
-    # garante que todos os nomes existam e sejam NA se ausentes
     res <- setNames(vector("list", length(all_names)), all_names)
     for (nm in all_names) {
-      res[[nm]] <- if (!is.null(x[[nm]])) x[[nm]] else NA
+      val <- x[[nm]]
+
+      if (is.null(val)) {
+        res[[nm]] <- NA
+      } else {
+        res[[nm]] <- val[1]
+      }
     }
+
     as.data.frame(res, stringsAsFactors = FALSE, check.names = FALSE)
   })
   df <- do.call(rbind, df_list)
+
 
   # avoid converting key columns to numeric
   core_cols <- c("miRNA", "target", "gene", "utr")
