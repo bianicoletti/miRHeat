@@ -7,12 +7,12 @@
 prepare_for_heatmap(df, remove_na = TRUE, aggregate_fun = NULL)
 }
 \arguments{
-\item{df}{Data.frame contendo `miRNA`, `target` e `Score`.}
+\item{df}{A data.frame containing the columns \code{miRNA}, \code{target}, and \code{Score}.}
 
-\item{remove_na}{Logical. Se TRUE, remove linhas com NA.}
+\item{remove_na}{Logical. If \code{TRUE}, rows with \code{NA} values are removed. Default is \code{TRUE}.}
 
-\item{aggregate_fun}{Function. Função para agregar valores duplicados (ex: mean, min, max).
-Se NULL, não agrega.}
+\item{aggregate_fun}{Function or NULL. Function used to aggregate duplicate miRNA-target pairs
+(e.g., \code{mean}, \code{min}, \code{max}). If \code{NULL} (default), no aggregation is performed.}
 }
 \value{
 Data.frame com colunas: miRNA, target, Score.

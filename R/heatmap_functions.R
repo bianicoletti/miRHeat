@@ -115,10 +115,10 @@ apply_numeric_filters <- function(df,
 #' Ensures the input data.frame has the required structure for heatmap generation.
 #' Optionally aggregates duplicated miRNA-target pairs.
 #'
-#' @param df Data.frame contendo `miRNA`, `target` e `Score`.
-#' @param remove_na Logical. Se TRUE, remove linhas com NA.
-#' @param aggregate_fun Function. Função para agregar valores duplicados (ex: mean, min, max).
-#'   Se NULL, não agrega.
+#' @param df A data.frame containing the columns \code{miRNA}, \code{target}, and \code{Score}.
+#' @param remove_na Logical. If \code{TRUE}, rows with \code{NA} values are removed. Default is \code{TRUE}.
+#' @param aggregate_fun Function or NULL. Function used to aggregate duplicate miRNA-target pairs
+#'   (e.g., \code{mean}, \code{min}, \code{max}). If \code{NULL} (default), no aggregation is performed.
 #'
 #' @return Data.frame com colunas: miRNA, target, Score.
 #'
@@ -160,7 +160,7 @@ prepare_for_heatmap <- function(df,
     )
   }
 
-  # remover NA depois da agregação
+
   if (remove_na) {
     df_out <- df_out[complete.cases(df_out), , drop = FALSE]
   }
@@ -201,6 +201,8 @@ prepare_for_heatmap <- function(df,
 #' @param custom_palette A vector of colors to build a custom palette via
 #'   \code{circlize::colorRamp2}. Must have at least 2 colors. The breakpoints
 #'   are distributed evenly across the Score range. Default is \code{NULL}.
+#' @param cluster_colors Character vector or NULL. Colors for cluster annotation.
+#'   If NULL (default), colors are assigned automatically.
 #'
 #' @return Invisibly returns the \code{ComplexHeatmap} object.
 #'
@@ -232,9 +234,7 @@ plot_mirheat <- function(df,
                          n_clusters   = NULL,
                          palette      = c("RdBu", "RdYlBu", "viridis"),
                          custom_palette = NULL,
-                         cluster_colors = NULL,
-                         row_fontsize = NULL,
-                         col_fontsize = NULL)
+                         cluster_colors = NULL)
   {
 
   # ---- input validation -------------------------------------------------------
@@ -412,14 +412,14 @@ plot_mirheat <- function(df,
   cluster_ids <- as.character(sort(unique(cluster_vec)))
 
   if (is.null(cluster_colors)) {
-    # comportamento padrão: cores aleatórias
+
     cluster_colors <- structure(
       circlize::rand_color(length(cluster_ids), luminosity = "bright"),
       names = cluster_ids
     )
   } else {
 
-    # validação básica
+
     if (!is.vector(cluster_colors)) {
       stop("'cluster_colors' must be a vector of colors.")
     }
@@ -450,10 +450,10 @@ plot_mirheat <- function(df,
   n_cols <- ncol(mat)
 
   if (n_rows > 50) {
-    message("Large number of miRNAs detected — consider increasing output size or reducing top_n.")
+    message("Large number of miRNAs detected. Consider increasing output size or reducing top_n.")
   }
   if (n_cols > 50) {
-    message("Large number of targets detected — consider increasing output size or reducing top_n.")
+    message("Large number of targets detected. Consider increasing output size or reducing top_n.")
   }
 
   if (is.null(row_fontsize)) {

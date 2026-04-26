@@ -9,7 +9,7 @@
 The miRHeat package provides functions for reading interaction prediction files
 between genes and miRNAs,
 selecting score metrics, preparing data, and generating heatmaps
-of miRNA × UTR interactions.
+of miRNA x UTR interactions.
 }
 \seealso{
 Useful links:

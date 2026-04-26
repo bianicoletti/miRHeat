@@ -24,12 +24,10 @@ RoxygenNote: 7.3.3
 Imports:
     utils,
     stats,
-    tools,
     ComplexHeatmap,
     circlize,
     dynamicTreeCut,
-    reshape2,
-    tibble
+    reshape2
 Suggests:
     testthat (>= 3.0.0),
     knitr,

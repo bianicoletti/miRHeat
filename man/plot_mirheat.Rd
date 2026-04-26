@@ -13,9 +13,7 @@ plot_mirheat(
   n_clusters = NULL,
   palette = c("RdBu", "RdYlBu", "viridis"),
   custom_palette = NULL,
-  cluster_colors = NULL,
-  row_fontsize = NULL,
-  col_fontsize = NULL
+  cluster_colors = NULL
 )
 }
 \arguments{
@@ -48,6 +46,9 @@ if \code{custom_palette} is provided.}
 \item{custom_palette}{A vector of colors to build a custom palette via
 \code{circlize::colorRamp2}. Must have at least 2 colors. The breakpoints
 are distributed evenly across the Score range. Default is \code{NULL}.}
+
+\item{cluster_colors}{Character vector or NULL. Colors for cluster annotation.
+If NULL (default), colors are assigned automatically.}
 }
 \value{
 Invisibly returns the \code{ComplexHeatmap} object.
