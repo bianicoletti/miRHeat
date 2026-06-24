@@ -1,0 +1,46 @@
+# ----------------------------
+# pkgdown site configuration
+# ----------------------------
+
+# Template and Bootstrap
+template:
+  bootstrap: 5
+  bootswatch: minty
+
+# Navbar (top menu)
+navbar:
+  title: "miRHeat"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Vignettes"
+      menu:
+        - text: "Introduction to miRHeat"
+          href: articles/intro.html
+    - text: "Functions"
+      href: reference/index.html
+
+home:
+  title: mirHeat
+  logo: man/figures/logo_miRHeat.png
+
+# Function reference
+reference:
+  - title: "Main functions"
+    contents:
+      - parse_file
+      - select_score
+      - apply_numeric_filters
+      - prepare_for_heatmap
+      - plot_mirheat
+      - mirHeat_table
+
+# Articles (vignettes)
+articles:
+  - title: "Tutorials"
+    contents:
+      - intro
+
+# Favicon and metadata
+favicon: pkgdown/favicon.png
+url: "https://github.com/bianicoletti/miRHeat"

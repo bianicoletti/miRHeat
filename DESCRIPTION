@@ -1,8 +1,7 @@
 Package: miRHeat
 Type: Package
-Title: Tools for 'miRNA'–'UTR' Interaction Filtering and Visualization
+Title: Tools for miRNA–UTR Interaction Filtering and Visualization
 Version: 0.1.0
-Date: 2026-06-24
 Authors@R: 
     c(
       person(
@@ -12,17 +11,26 @@ Authors@R:
         role = c("aut", "cre")
       )
     )
-Description: Tools to process, filter and visualize 'miRNA'–'UTR' interaction predictions.
-    Includes functions to parse 'RNAhybrid' or 'IntaRNA' output files, filter by
+Description: Tools to process, filter and visualize miRNA–UTR interaction predictions.
+    Includes functions to parse RNAhybrid or IntaRNA output files, filter by
     interaction energy and seed pairing, and convert results into tidy data frames
     and heatmaps for comparative visualization.
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 URL: https://github.com/bianicoletti/miRHeat
 BugReports: https://github.com/bianicoletti/miRHeat/issues
-Imports: utils, stats, ComplexHeatmap, circlize, dynamicTreeCut,
-        reshape2
-Suggests: testthat (>= 3.0.0), knitr, rmarkdown
+RoxygenNote: 7.3.3
+Imports:
+    utils,
+    stats,
+    ComplexHeatmap,
+    circlize,
+    dynamicTreeCut,
+    reshape2
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Config/roxygen2/version: 8.0.0
