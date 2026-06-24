@@ -32,6 +32,7 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
+Additional_repositories: https://bioconductor.org/packages/release/bioc
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
