@@ -22,5 +22,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Maria Nicoletti \email{maria.nicoletti@unesp.br}
 
+Authors:
+\itemize{
+  \item Maria Nicoletti \email{maria.nicoletti@unesp.br}
+}
+
 }
 \keyword{internal}
